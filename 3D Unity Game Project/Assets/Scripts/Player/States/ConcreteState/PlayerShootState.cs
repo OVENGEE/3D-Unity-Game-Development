@@ -16,6 +16,21 @@ public class PlayerShootState : PlayerState
         base.ExitState();
     }
 
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
+    }
+
+    public override void FrameUpdate()
+    {
+        base.FrameUpdate();
+    }
+
+    public override void AnimationTriggerEvent()
+    {
+        base.AnimationTriggerEvent();
+    }
+
 
     
 }

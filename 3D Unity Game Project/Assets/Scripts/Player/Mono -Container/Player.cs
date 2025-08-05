@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
     public PlayerWalkState WalkState { get; set; }
     public PlayerCrouchState CrouchState { get; set; }
 
+    public PlayerShootState ShootState { get; set; }
+
     //Input 
     public CustomInputSystem inputs;
 
@@ -28,8 +30,9 @@ public class Player : MonoBehaviour
         StateMachine = new PlayerStateMachine();
         WalkState = new PlayerWalkState(this, StateMachine);
         CrouchState = new PlayerCrouchState(this, StateMachine);
+        ShootState = new PlayerShootState(this, StateMachine);
 
-        if  (inputs == null)
+        if (inputs == null)
         {
             inputs = new CustomInputSystem();
             Debug.Log("Custom input new instance made!");
