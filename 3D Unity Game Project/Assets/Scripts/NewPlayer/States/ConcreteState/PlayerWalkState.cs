@@ -1,23 +1,48 @@
+using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class PlayerWalkState : PlayerState
 {
+    //Constants
+    float GRAVITY = -9.81f;
+
+    //Input
+    InputAction moveAction;
+
+    //Vectors
+    private  Vector2 moveDirectionInput;
+    private Vector3 velocity;
+    private CharacterController controller;
+
+
     public PlayerWalkState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
     }
     public override void EnterState()
     {
         base.EnterState();
+        controller = base.player.GetComponent<CharacterController>();
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        if (moveAction == null)
+        {
+            moveAction = base.player.inputs.Player.Move;
+        }
     }
 
     public override void FrameUpdate()
     {
         base.FrameUpdate();
+        moveDirectionInput = moveAction.ReadValue<Vector2>();
     }
 
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        HandleMovement();
     }
 
     public override void ExitState()
@@ -27,5 +52,22 @@ public class PlayerWalkState : PlayerState
     public override void AnimationTriggerEvent()
     {
         base.AnimationTriggerEvent();
+    }
+
+    void HandleMovement()
+    {
+        //Motion calculation
+        Vector3 move = base.player.transform.right * moveDirectionInput.x + base.player.transform.forward * moveDirectionInput.y;
+        float moveSpeed = base.player.MoveSpeed;
+
+        //Apply motion to controller
+        controller.Move(move * moveSpeed * Time.deltaTime);
+
+        //Ground check for controller
+        if (controller.isGrounded && velocity.y < 0) velocity.y = -2f;
+
+        velocity.y += GRAVITY * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
+
     }
 }

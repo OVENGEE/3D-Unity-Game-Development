@@ -1,10 +1,9 @@
 
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    //Constants
-    float GRAVITY = -9.8f;
 
     //Movement Settings
     [Header("Movement Settings")]
@@ -24,7 +23,10 @@ public class Player : MonoBehaviour
 
     public PlayerStateMachine StateMachine { get; set; }
     public PlayerWalkState WalkState { get; set; }
-    public PlayerCrouchState CrouchState {get; set;}
+    public PlayerCrouchState CrouchState { get; set; }
+
+    //Input 
+    public CustomInputSystem inputs;
 
 
 
@@ -34,11 +36,22 @@ public class Player : MonoBehaviour
         StateMachine = new PlayerStateMachine();
         WalkState = new PlayerWalkState(this, StateMachine);
         CrouchState = new PlayerCrouchState(this, StateMachine);
+
+        if (inputs == null)
+        {
+            inputs = new CustomInputSystem();
+            Debug.Log("Custom input new instance made!");
+        }
     }
 
     void Start()
     {
         StateMachine.Initialise(CrouchState);
+    }
+
+    public void OnEnable()
+    {
+        inputs.Enable();
     }
 
     void Update()
@@ -49,6 +62,11 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         StateMachine.CurrentPlayerState.PhysicsUpdate();
+    }
+
+    public void OnDisable()
+    {
+        inputs.Disable();
     }
     #region Animation Triggers
 
