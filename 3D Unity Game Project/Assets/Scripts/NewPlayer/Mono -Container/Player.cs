@@ -7,11 +7,11 @@ public class Player : MonoBehaviour
 
     //Movement Settings
     [Header("Movement Settings")]
-    public float moveSpeed = 5f;
+    public float MoveSpeed = 5f;
 
     //Look requirements
     [Header("Look Settings")]
-    public Transform cameraTransform;
+    public Transform CameraTransform;
     public float lookSensitivity = 2f;
     public float verticalLookLimit = 90f;
 
@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
         WalkState = new PlayerWalkState(this, StateMachine);
         CrouchState = new PlayerCrouchState(this, StateMachine);
 
-        if (inputs == null)
+        if  (inputs == null)
         {
             inputs = new CustomInputSystem();
             Debug.Log("Custom input new instance made!");
@@ -46,12 +46,12 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        StateMachine.Initialise(CrouchState);
+        StateMachine.Initialise(WalkState);
     }
 
     public void OnEnable()
     {
-        inputs.Enable();
+     inputs.Enable();
     }
 
     void Update()
@@ -66,7 +66,7 @@ public class Player : MonoBehaviour
 
     public void OnDisable()
     {
-        inputs.Disable();
+     inputs.Disable();
     }
     #region Animation Triggers
 

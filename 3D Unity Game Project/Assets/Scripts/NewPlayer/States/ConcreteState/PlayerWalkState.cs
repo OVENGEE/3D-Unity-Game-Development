@@ -22,6 +22,7 @@ public class PlayerWalkState : PlayerState
     }
     public override void EnterState()
     {
+        Debug.Log("In the walking state");
         base.EnterState();
         controller = base.player.GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
