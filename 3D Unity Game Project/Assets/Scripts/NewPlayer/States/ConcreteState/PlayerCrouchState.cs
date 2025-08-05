@@ -3,6 +3,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerCrouchState : PlayerWalkState
 {
+    //InputActions
+    InputAction crouch;
+
     public PlayerCrouchState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
     }
