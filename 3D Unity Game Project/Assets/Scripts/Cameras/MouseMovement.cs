@@ -45,8 +45,6 @@ public class MouseMovement : MonoBehaviour
         float mouseX = lookAction.ReadValue<Vector2>().x * mouseSensitivity * Time.deltaTime;
         float mouseY = lookAction.ReadValue<Vector2>().y * mouseSensitivity * Time.deltaTime;
 
-        Debug.Log($"mouse x: {mouseX} and the mouse Y: {mouseY}");
-
         //Control rotation around x axis ( look up and down)
         xRotation -= mouseY;
 

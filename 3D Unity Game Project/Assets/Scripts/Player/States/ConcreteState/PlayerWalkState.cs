@@ -10,9 +10,11 @@ public class PlayerWalkState : PlayerState
 
     //Input
     InputAction moveAction;
+    InputAction crouchAction;
+    InputAction SprintAction;
 
     //Vectors
-    private  Vector2 moveDirectionInput;
+    private Vector2 moveDirectionInput;
     private Vector3 velocity;
     private CharacterController controller;
 
@@ -27,16 +29,18 @@ public class PlayerWalkState : PlayerState
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        if (moveAction == null)
-        {
-            moveAction = base.player.inputs.Player.Move;
-        }
+        NullChecks();
     }
 
     public override void FrameUpdate()
     {
         base.FrameUpdate();
         moveDirectionInput = moveAction.ReadValue<Vector2>();
+
+        if (crouchAction.WasPressedThisFrame())
+        {
+            playerStateMachine.SwitchState(new PlayerCrouchState(player, playerStateMachine));
+        }
     }
 
     public override void PhysicsUpdate()
@@ -69,5 +73,18 @@ public class PlayerWalkState : PlayerState
         velocity.y += GRAVITY * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
 
+    }
+
+    void NullChecks()
+    {
+        if (moveAction == null)
+        {
+            moveAction = base.player.inputs.Player.Move;
+        }
+
+        if (crouchAction == null)
+        {
+            crouchAction = base.player.inputs.Player.Crouch;
+        }
     }
 }

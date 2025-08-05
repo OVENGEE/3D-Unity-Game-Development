@@ -9,14 +9,6 @@ public class Player : MonoBehaviour
     [Header("Movement Settings")]
     public float MoveSpeed = 5f;
 
-    //Look requirements
-    [Header("Look Settings")]
-    public Transform CameraTransform;
-    public float lookSensitivity = 2f;
-    public float verticalLookLimit = 90f;
-
-
-
     private CharacterController controller;
 
     //State instances 

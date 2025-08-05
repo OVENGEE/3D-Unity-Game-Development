@@ -9,15 +9,15 @@ public class PlayerStateMachine
     {
         // function that starts with a state
         CurrentPlayerState = initialState;
-        CurrentPlayerState.EnterState();
+        CurrentPlayerState?.EnterState();
     }
 
     public void SwitchState(PlayerState newState)
     {
         //function that switches from one state to another taking new state as input
-        CurrentPlayerState.ExitState();
+        CurrentPlayerState?.ExitState();
         CurrentPlayerState = newState;
-        CurrentPlayerState.ExitState();
+        CurrentPlayerState?.EnterState();
     }
 }
 //Code reference:
