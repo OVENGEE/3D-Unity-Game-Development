@@ -16,7 +16,9 @@ public class PlayerWalkState : PlayerState
     //Vectors
     private Vector2 moveDirectionInput;
     private Vector3 velocity;
-    private CharacterController controller;
+    protected Vector3 move;
+
+    protected CharacterController controller;
 
 
     public PlayerWalkState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
@@ -39,7 +41,14 @@ public class PlayerWalkState : PlayerState
 
         if (crouchAction.WasPressedThisFrame())
         {
+            //Transition to crouch state if crouch key pressed
             playerStateMachine.SwitchState(new PlayerCrouchState(player, playerStateMachine));
+        }
+
+        if (SprintAction.WasPressedThisFrame())
+        {
+            //Transition to sprint state if sprint key pressed
+            playerStateMachine.SwitchState(new PlayerSprintState(player, playerStateMachine));
         }
     }
 
@@ -61,7 +70,7 @@ public class PlayerWalkState : PlayerState
     void HandleMovement()
     {
         //Motion calculation
-        Vector3 move = base.player.transform.right * moveDirectionInput.x + base.player.transform.forward * moveDirectionInput.y;
+        move = base.player.transform.right * moveDirectionInput.x + base.player.transform.forward * moveDirectionInput.y;
         float moveSpeed = base.player.MoveSpeed;
 
         //Apply motion to controller
@@ -85,6 +94,11 @@ public class PlayerWalkState : PlayerState
         if (crouchAction == null)
         {
             crouchAction = base.player.inputs.Player.Crouch;
+        }
+
+        if (SprintAction == null)
+        {
+            SprintAction = base.player.inputs.Player.Sprint;
         }
     }
 }

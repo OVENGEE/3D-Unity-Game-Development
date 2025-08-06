@@ -1,4 +1,6 @@
 
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,6 +20,7 @@ public class Player : MonoBehaviour
     public PlayerCrouchState CrouchState { get; set; }
 
     public PlayerShootState ShootState { get; set; }
+    public PlayerSprintState SprintState { get; set; }
 
     //Input 
     public CustomInputSystem inputs;
@@ -31,6 +34,7 @@ public class Player : MonoBehaviour
         WalkState = new PlayerWalkState(this, StateMachine);
         CrouchState = new PlayerCrouchState(this, StateMachine);
         ShootState = new PlayerShootState(this, StateMachine);
+        SprintState = new PlayerSprintState(this, StateMachine);
 
         if (inputs == null)
         {
@@ -46,7 +50,7 @@ public class Player : MonoBehaviour
 
     public void OnEnable()
     {
-     inputs.Enable();
+        inputs.Enable();
     }
 
     void Update()
@@ -61,8 +65,14 @@ public class Player : MonoBehaviour
 
     public void OnDisable()
     {
-     inputs.Disable();
+        inputs.Disable();
     }
+
+    public void StartSprintCoroutine(IEnumerator coroutine)
+    {
+        StartCoroutine(coroutine);
+    }
+
     #region Animation Triggers
 
     //Deals with all animations for the player
