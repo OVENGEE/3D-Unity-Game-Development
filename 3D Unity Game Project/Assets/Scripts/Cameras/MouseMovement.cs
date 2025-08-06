@@ -23,7 +23,6 @@ public class MouseMovement : MonoBehaviour
             Debug.Log("new instance of the input system assigned!");
             if (lookAction == null)
             {
-                Debug.Log("look action assigned!");
                 lookAction = inputs.Player.Look;
             }
         }

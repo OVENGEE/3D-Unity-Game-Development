@@ -8,12 +8,8 @@ public class PlayerSprintState : PlayerWalkState
     InputAction sprintAction;
 
     //Sprint variables
-    float sprintSpeed;
     float sprintDuration = 2f;
-    float sprintCooldown = 1f;
-    bool canSprint = true;
-    bool isSprinting = false;
-
+    float sprintTimer = 0f;
 
     public PlayerSprintState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
@@ -22,6 +18,8 @@ public class PlayerSprintState : PlayerWalkState
     public override void EnterState()
     {
         base.EnterState();
+        sprintTimer = 0f;
+
         Debug.Log("Entered Sprint State!");
 
         if (sprintAction == null)
@@ -33,6 +31,7 @@ public class PlayerSprintState : PlayerWalkState
     public override void ExitState()
     {
         base.ExitState();
+        base.controller.Move(base.move * -base.player.MoveSpeed * Time.deltaTime);
         Debug.Log("Left Sprint State!");
     }
 
@@ -40,21 +39,23 @@ public class PlayerSprintState : PlayerWalkState
     {
         base.FrameUpdate();
 
-        if (canSprint && sprintAction.IsPressed())
+        sprintTimer += Time.deltaTime;
+
+        //if Sprint button released or duration exceeded, exit sprint 
+        if (!sprintAction.IsPressed() || sprintTimer >= sprintDuration)
         {
-            //Starts the sprint coroutine
-            base.player.StartCoroutine(sprintCoroutine());
-        }
-        else
-        {
-            //return to walking state if not running currently
+            base.player.StartSprintCooldown();
             base.playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
+            return;
         }
+
     }
 
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        //Sprint movement logic
+        base.controller.Move(base.move * base.player.MoveSpeed * Time.deltaTime);
     }
 
     public override void AnimationTriggerEvent()
@@ -62,13 +63,10 @@ public class PlayerSprintState : PlayerWalkState
         base.AnimationTriggerEvent();
     }
 
-    private IEnumerator sprintCoroutine()
-    {
-        //Toggle current state of the 
-
-        yield return null;
-    }
 }
 
 // The sprint mechanic logic comes from the dash logic from this video:
+// https://www.youtube.com/watch?v=721TkkJ-CNM&t=8s
 
+// After realizing that the controller move is additive if I have one script inheriting from a script which uses the move and move the charater controller again 
+// Therefore in the exit state I must subtract the additional movement I added;

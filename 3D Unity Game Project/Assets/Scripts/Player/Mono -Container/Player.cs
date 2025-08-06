@@ -25,6 +25,13 @@ public class Player : MonoBehaviour
     //Input 
     public CustomInputSystem inputs;
 
+    //Sprint variables
+    [Header("Sprint Variables")]
+    public bool canSprint = true;
+    public float sprintCooldown = 1f;
+
+    private float sprintCooldownTimer = 0f;
+
 
 
     void Awake()
@@ -56,6 +63,16 @@ public class Player : MonoBehaviour
     void Update()
     {
         StateMachine.CurrentPlayerState.FrameUpdate();
+
+        if (!canSprint)
+        {
+            sprintCooldownTimer -= Time.deltaTime;
+            if (sprintCooldownTimer <= 0f)
+            {
+                canSprint = true;
+                Debug.Log("Sprint rest, cooldown done!");
+            }
+        }
     }
 
     void FixedUpdate()
@@ -68,10 +85,13 @@ public class Player : MonoBehaviour
         inputs.Disable();
     }
 
-    public void StartSprintCoroutine(IEnumerator coroutine)
+    public void StartSprintCooldown()
     {
-        StartCoroutine(coroutine);
+        canSprint = false;
+        sprintCooldownTimer = sprintCooldown;
     }
+
+
 
     #region Animation Triggers
 
