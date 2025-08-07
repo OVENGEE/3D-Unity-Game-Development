@@ -31,7 +31,7 @@ public class PlayerCrouchState : PlayerWalkState
     public override void ExitState()
     {
         base.ExitState();
-        base.player.transform.localScale = Vector3.one;
+        base.controller.height = 2f;
         Debug.Log("left crouch state!");
     }
 
@@ -54,8 +54,8 @@ public class PlayerCrouchState : PlayerWalkState
 
     public void HandleCrouch()
     {
-        Vector3 crouchVector = new(0.5f, 0.5f, 1f); // Declare crouch height
-        base.player.transform.localScale = crouchVector; // setting crouch height on player
+        float crouchHeight = 1f;
+        base.controller.height = crouchHeight;
         float crouchSpeed = -0.5f * (base.player.MoveSpeed);//Crouch movement speed
 
         base.controller.Move(base.move * crouchSpeed * Time.deltaTime);
