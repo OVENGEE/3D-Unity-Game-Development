@@ -6,12 +6,14 @@ using UnityEngine.InputSystem;
 public class PlayerWalkState : PlayerState
 {
     //Constants
-    float GRAVITY = -9.81f;
+    const float GRAVITY = -9.81f;
+    const float JUMPHEIGHT = 1.5f;
 
     //Input
     InputAction moveAction;
     InputAction crouchAction;
     InputAction SprintAction;
+    InputAction jumpAction;
 
     //Vectors
     private Vector2 moveDirectionInput;
@@ -50,12 +52,15 @@ public class PlayerWalkState : PlayerState
             //Transition to sprint state if sprint key pressed
             playerStateMachine.SwitchState(new PlayerSprintState(player, playerStateMachine));
         }
+
+        
     }
 
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
         HandleMovement();
+        HandleJump();
     }
 
     public override void ExitState()
@@ -84,6 +89,14 @@ public class PlayerWalkState : PlayerState
 
     }
 
+    public void HandleJump()
+    {
+        if (jumpAction.WasPerformedThisFrame() && controller.isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(JUMPHEIGHT * -2f * GRAVITY);
+        }
+    }
+
     void NullChecks()
     {
         if (moveAction == null)
@@ -99,6 +112,11 @@ public class PlayerWalkState : PlayerState
         if (SprintAction == null)
         {
             SprintAction = base.player.inputs.Player.Sprint;
+        }
+
+        if (jumpAction == null)
+        {
+            jumpAction = base.player.inputs.Player.Jump;
         }
     }
 }

@@ -11,7 +11,6 @@ public class Player : MonoBehaviour
     [Header("Movement Settings")]
     public float MoveSpeed = 5f;
 
-    private CharacterController controller;
 
     //State instances 
 
@@ -32,11 +31,13 @@ public class Player : MonoBehaviour
 
     private float sprintCooldownTimer = 0f;
 
+    //Camera reference
+
+
 
 
     void Awake()
     {
-        controller = GetComponent<CharacterController>();
         StateMachine = new PlayerStateMachine();
         WalkState = new PlayerWalkState(this, StateMachine);
         CrouchState = new PlayerCrouchState(this, StateMachine);
