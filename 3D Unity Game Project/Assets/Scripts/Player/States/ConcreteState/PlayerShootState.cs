@@ -34,3 +34,6 @@ public class PlayerShootState : PlayerState
 
     
 }
+
+//Code reference:
+// The logic for the shooting with raycasting :https://www.youtube.com/watch?v=xasmH86e4PE
