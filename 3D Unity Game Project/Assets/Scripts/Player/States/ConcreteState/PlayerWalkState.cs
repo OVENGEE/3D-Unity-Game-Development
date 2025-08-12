@@ -19,12 +19,11 @@ public class PlayerWalkState : PlayerState
     private Vector2 moveDirectionInput;
     private Vector3 velocity;
     protected Vector3 move;
-
     protected CharacterController controller;
 
 
     public PlayerWalkState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
-    {
+    {   
     }
     public override void EnterState()
     {

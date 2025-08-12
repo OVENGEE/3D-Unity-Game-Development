@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
     private float sprintCooldownTimer = 0f;
 
     //Camera reference
-
+    public Camera camera;
 
 
 
@@ -49,6 +49,12 @@ public class Player : MonoBehaviour
             inputs = new CustomInputSystem();
             Debug.Log("Custom input new instance made!");
         }
+
+        if (camera == null)
+        {
+            camera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+        }
+        
     }
 
     void Start()
