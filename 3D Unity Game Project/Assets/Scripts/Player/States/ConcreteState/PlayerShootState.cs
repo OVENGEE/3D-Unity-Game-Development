@@ -13,7 +13,6 @@ public class PlayerShootState : PlayerWalkState
     bool shoot;
 
     //Input actions
-    InputAction AimAction;
     InputAction shootAction;
 
     public PlayerShootState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
@@ -29,11 +28,6 @@ public class PlayerShootState : PlayerWalkState
         if (shootAction == null)
         {
             shootAction = base.player.inputs.Player.Shoot;
-        }
-
-        if (AimAction == null)
-        {
-            AimAction = base.player.inputs.Player.Aim;
         }
     }
 
@@ -75,7 +69,7 @@ public class PlayerShootState : PlayerWalkState
             if (target.tag == "Target" && shootAction.WasPerformedThisFrame())
             {
                 Debug.Log($"{hit.collider.name} has been hit!");
-                GameObject.Destroy(target);
+                // GameObject.Destroy(target);
             }
             
         }

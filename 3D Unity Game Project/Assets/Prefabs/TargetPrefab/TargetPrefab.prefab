@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1288861507530716924}
   - component: {fileID: 6117245096244926396}
   - component: {fileID: 2588673662645665644}
+  - component: {fileID: 2385166593378423783}
   m_Layer: 0
   m_Name: TargetPrefab
   m_TagString: Target
@@ -27,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2610966056795105518}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.69483304, y: -0.09995018, z: 0.08226415, w: 0.7074247}
+  m_LocalRotation: {x: 0.6948334, y: -0.099952385, z: 0.08226858, w: 0.70742345}
   m_LocalPosition: {x: 15, y: 1.12, z: 6.2}
   m_LocalScale: {x: 0.62363, y: 0.044559382, z: 0.82854}
   m_ConstrainProportionsScale: 0
@@ -110,3 +111,15 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!114 &2385166593378423783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2610966056795105518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fca8471cd0a14346b85a36e03f0ae22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
