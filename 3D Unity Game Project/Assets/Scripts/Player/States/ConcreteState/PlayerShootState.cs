@@ -1,7 +1,21 @@
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class PlayerShootState : PlayerState
+public class PlayerShootState : PlayerWalkState
 {
+    //Shoot references
+    private float firetimer;
+    private float range;
+    private Camera camera;
+    Ray debugray;
+    bool shoot;
+
+    //Input actions
+    InputAction AimAction;
+    InputAction shootAction;
+
     public PlayerShootState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
     }
@@ -9,6 +23,18 @@ public class PlayerShootState : PlayerState
     public override void EnterState()
     {
         base.EnterState();
+        range = 20f;
+        camera = base.player.camera;
+
+        if (shootAction == null)
+        {
+            shootAction = base.player.inputs.Player.Shoot;
+        }
+
+        if (AimAction == null)
+        {
+            AimAction = base.player.inputs.Player.Aim;
+        }
     }
 
     public override void ExitState()
@@ -24,6 +50,9 @@ public class PlayerShootState : PlayerState
     public override void FrameUpdate()
     {
         base.FrameUpdate();
+        firetimer -= Time.deltaTime;
+        shootFunction();
+        
     }
 
     public override void AnimationTriggerEvent()
@@ -31,8 +60,36 @@ public class PlayerShootState : PlayerState
         base.AnimationTriggerEvent();
     }
 
+    void shootFunction()
+    {
+        RaycastHit hit;
+        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
+        debugray = ray;
+        
+        //Play animation and    particle effect
+        if (Physics.Raycast(ray, out hit, range))
+        {
+            // Debug.Log("Player hit something!");
 
-    
+            GameObject target = hit.collider.gameObject;
+            if (target.tag == "Target" && shootAction.WasPerformedThisFrame())
+            {
+                Debug.Log($"{hit.collider.name} has been hit!");
+                GameObject.Destroy(target);
+            }
+            
+        }
+
+        firetimer = 0.1f;
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(debugray.origin, debugray.direction * range);
+    }
+
+
 }
 
 //Code reference:

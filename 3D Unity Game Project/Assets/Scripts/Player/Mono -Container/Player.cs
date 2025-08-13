@@ -59,7 +59,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        StateMachine.Initialise(WalkState);
+        StateMachine.Initialise(ShootState);
     }
 
     public void OnEnable()
