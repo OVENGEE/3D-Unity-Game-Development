@@ -23,7 +23,7 @@ public class PlayerWalkState : PlayerState
 
 
     public PlayerWalkState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
-    {   
+    {
     }
     public override void EnterState()
     {
@@ -31,28 +31,16 @@ public class PlayerWalkState : PlayerState
         controller = base.player.GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        base.player.stateText.text = "Walking";
         NullChecks();
+        base.player.stateText.text = "Walking";
+        crouchAction.performed += OnCrouch;
+        SprintAction.performed += OnSprint;
     }
 
     public override void FrameUpdate()
     {
         base.FrameUpdate();
         moveDirectionInput = moveAction.ReadValue<Vector2>();
-
-        if (crouchAction.WasPressedThisFrame())
-        {
-            //Transition to crouch state if crouch key pressed
-            playerStateMachine.SwitchState(new PlayerCrouchState(player, playerStateMachine));
-        }
-
-        if (SprintAction.WasPressedThisFrame())
-        {
-            //Transition to sprint state if sprint key pressed
-            playerStateMachine.SwitchState(new PlayerSprintState(player, playerStateMachine));
-        }
-
-        
     }
 
     public override void PhysicsUpdate()
@@ -64,12 +52,14 @@ public class PlayerWalkState : PlayerState
         {
             HandleJump();
         }
-        
+
     }
 
     public override void ExitState()
     {
         base.ExitState();
+        crouchAction.performed -= OnCrouch;
+        SprintAction.performed -= OnSprint;
     }
     public override void AnimationTriggerEvent()
     {
@@ -122,5 +112,17 @@ public class PlayerWalkState : PlayerState
         {
             jumpAction = base.player.inputs.Player.Jump;
         }
+    }
+
+    //Event Handlers
+
+    private void OnCrouch(InputAction.CallbackContext context)
+    {
+        playerStateMachine.SwitchState(new PlayerCrouchState(player, playerStateMachine));
+    }
+
+    private void OnSprint(InputAction.CallbackContext context)
+    {
+        playerStateMachine.SwitchState(new PlayerSprintState(player, playerStateMachine));
     }
 }

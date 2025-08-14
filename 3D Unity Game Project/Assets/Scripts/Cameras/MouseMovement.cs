@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class MouseMovement : MonoBehaviour
 {
-    InputSystem_Actions inputs;
+    CustomInputSystem inputs;
     InputAction lookAction;
 
 
@@ -19,7 +19,7 @@ public class MouseMovement : MonoBehaviour
     {
         if (inputs == null)
         {
-            inputs = new InputSystem_Actions();
+            inputs = new CustomInputSystem();
             Debug.Log("new instance of the input system assigned!");
             if (lookAction == null)
             {
