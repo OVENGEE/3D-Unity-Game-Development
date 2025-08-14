@@ -33,8 +33,11 @@ public class PlayerWalkState : PlayerState
         Cursor.visible = false;
         NullChecks();
         base.player.stateText.text = "Walking";
+
+        //Event Subscriptions
         crouchAction.performed += OnCrouch;
         SprintAction.performed += OnSprint;
+        jumpAction.performed += OnJump;
     }
 
     public override void FrameUpdate()
@@ -47,19 +50,16 @@ public class PlayerWalkState : PlayerState
     {
         base.PhysicsUpdate();
         HandleMovement();
-
-        if (jumpAction.WasPerformedThisFrame())
-        {
-            HandleJump();
-        }
-
     }
 
     public override void ExitState()
     {
         base.ExitState();
+
+        //Event un-Subscriptions
         crouchAction.performed -= OnCrouch;
         SprintAction.performed -= OnSprint;
+        jumpAction.performed -= OnJump;
     }
     public override void AnimationTriggerEvent()
     {
@@ -124,5 +124,10 @@ public class PlayerWalkState : PlayerState
     private void OnSprint(InputAction.CallbackContext context)
     {
         playerStateMachine.SwitchState(new PlayerSprintState(player, playerStateMachine));
+    }
+
+    private void OnJump(InputAction.CallbackContext context)
+    {
+        HandleJump();
     }
 }

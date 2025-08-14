@@ -28,16 +28,24 @@ public class PlayerSprintState : PlayerWalkState
 
         if (sprintAction == null)
         {
+            // assigning action if null
             sprintAction = base.player.inputs.Player.Sprint;
         }
+
+        //Event subscription
+        sprintAction.canceled += OnSprintReleased;
     }
 
     public override void ExitState()
     {
         base.ExitState();
-        FOVTransition(baseFOV);
+
+        // FOVTransition(baseFOV);
         base.controller.Move(base.move * -base.player.MoveSpeed * Time.deltaTime);
         Debug.Log("Left Sprint State!");
+
+        //Event unsubscription
+        sprintAction.canceled += OnSprintReleased;
     }
 
     public override void FrameUpdate()
@@ -47,7 +55,7 @@ public class PlayerSprintState : PlayerWalkState
         sprintTimer += Time.deltaTime;
 
         //if Sprint button released or duration exceeded, exit sprint 
-        if (!sprintAction.IsPressed() || sprintTimer >= sprintDuration)
+        if (sprintTimer >= sprintDuration)
         {
             base.player.StartSprintCooldown();
             base.playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
@@ -63,7 +71,7 @@ public class PlayerSprintState : PlayerWalkState
         base.controller.Move(base.move * base.player.MoveSpeed * Time.deltaTime);
 
         //change the fov
-        FOVTransition(sprintFOV);
+        // FOVTransition(sprintFOV);
     }
 
     public override void AnimationTriggerEvent()
@@ -76,6 +84,14 @@ public class PlayerSprintState : PlayerWalkState
         float initialFOV = base.player.camera.fieldOfView;
         base.player.camera.fieldOfView = Mathf.Lerp(initialFOV, newFOV, 1f);
     }
+
+
+    private void OnSprintReleased(InputAction.CallbackContext context)
+    {
+        base.player.StartSprintCooldown();
+        base.playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
+    }
+
 
 }
 
