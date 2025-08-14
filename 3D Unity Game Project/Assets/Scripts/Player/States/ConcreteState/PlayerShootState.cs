@@ -69,7 +69,7 @@ public class PlayerShootState : PlayerWalkState
             if (target.tag == "Target" && shootAction.WasPerformedThisFrame())
             {
                 Debug.Log($"{hit.collider.name} has been hit!");
-                // GameObject.Destroy(target);
+                GameObject.Destroy(target);
             }
             
         }
