@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerShootState : PlayerWalkState
+public class PlayerShootState : PlayerState
 {
     //Shoot references
     private float firetimer;
