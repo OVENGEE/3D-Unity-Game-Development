@@ -1,8 +1,10 @@
 
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -34,6 +36,9 @@ public class Player : MonoBehaviour
     //Camera reference
     public Camera camera;
 
+    //UI dependancies
+    public TextMeshProUGUI stateText;
+
 
 
     void Awake()
@@ -54,12 +59,11 @@ public class Player : MonoBehaviour
         {
             camera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
         }
-        
     }
 
     void Start()
     {
-        StateMachine.Initialise(ShootState);
+        StateMachine.Initialise(WalkState);
     }
 
     public void OnEnable()
@@ -71,6 +75,7 @@ public class Player : MonoBehaviour
     {
         StateMachine.CurrentPlayerState.FrameUpdate();
 
+        //This reset the cooldown of the sprint state even if you are not in the sprint state
         if (!canSprint)
         {
             sprintCooldownTimer -= Time.deltaTime;
@@ -94,10 +99,10 @@ public class Player : MonoBehaviour
 
     public void StartSprintCooldown()
     {
+        //Starts the sprintCooldown;
         canSprint = false;
         sprintCooldownTimer = sprintCooldown;
     }
-
 
 
     #region Animation Triggers

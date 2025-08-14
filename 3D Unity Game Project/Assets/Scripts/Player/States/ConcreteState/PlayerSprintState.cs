@@ -24,7 +24,7 @@ public class PlayerSprintState : PlayerWalkState
         base.EnterState();
         sprintTimer = 0f;
         baseFOV = base.player.camera.fieldOfView;
-        Debug.Log("Entered Sprint State!");
+        base.player.stateText.text = "Sprinting";
 
         if (sprintAction == null)
         {

@@ -20,6 +20,7 @@ public class PlayerCrouchState : PlayerWalkState
     public override void EnterState()
     {
         base.EnterState();
+        base.player.stateText.text = "Crouch";
         Debug.Log("In crouch state!");
 
         if (crouch == null)

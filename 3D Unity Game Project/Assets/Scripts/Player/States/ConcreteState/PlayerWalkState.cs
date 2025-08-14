@@ -31,7 +31,7 @@ public class PlayerWalkState : PlayerState
         controller = base.player.GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
+        base.player.stateText.text = "Walking";
         NullChecks();
     }
 
@@ -59,7 +59,12 @@ public class PlayerWalkState : PlayerState
     {
         base.PhysicsUpdate();
         HandleMovement();
-        HandleJump();
+
+        if (jumpAction.WasPerformedThisFrame())
+        {
+            HandleJump();
+        }
+        
     }
 
     public override void ExitState()
@@ -90,7 +95,7 @@ public class PlayerWalkState : PlayerState
 
     public void HandleJump()
     {
-        if (jumpAction.WasPerformedThisFrame() && controller.isGrounded)
+        if (controller.isGrounded)
         {
             velocity.y = Mathf.Sqrt(JUMPHEIGHT * -2f * GRAVITY);
         }
