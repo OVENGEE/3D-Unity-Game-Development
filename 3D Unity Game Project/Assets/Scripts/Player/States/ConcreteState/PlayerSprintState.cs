@@ -13,7 +13,7 @@ public class PlayerSprintState : PlayerWalkState
 
     //FOV variables
     float baseFOV = 0f;
-    float sprintFOV = 30f;
+    float sprintFOV = 90f;
 
     public PlayerSprintState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
@@ -40,7 +40,7 @@ public class PlayerSprintState : PlayerWalkState
     {
         base.ExitState();
 
-        // FOVTransition(baseFOV);
+        base.FOVTransition(baseFOV);
         base.controller.Move(base.move * -base.player.MoveSpeed * Time.deltaTime);
         Debug.Log("Left Sprint State!");
 
@@ -71,18 +71,12 @@ public class PlayerSprintState : PlayerWalkState
         base.controller.Move(base.move * base.player.MoveSpeed * Time.deltaTime);
 
         //change the fov
-        // FOVTransition(sprintFOV);
+        base.FOVTransition(sprintFOV);
     }
 
     public override void AnimationTriggerEvent()
     {
         base.AnimationTriggerEvent();
-    }
-
-    void FOVTransition(float newFOV)
-    {
-        float initialFOV = base.player.camera.fieldOfView;
-        base.player.camera.fieldOfView = Mathf.Lerp(initialFOV, newFOV, 1f);
     }
 
 

@@ -7,6 +7,9 @@ public class PlayerCrouchState : PlayerWalkState
     //InputActions
     InputAction crouch;
 
+    //Camera settings
+    float baseFOV;
+
 
     public PlayerCrouchState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
@@ -21,7 +24,9 @@ public class PlayerCrouchState : PlayerWalkState
     {
         base.EnterState();
         base.player.stateText.text = "Crouch";
-        Debug.Log("In crouch state!");
+
+        //Getting FOV before crouching
+        
 
         if (crouch == null)
         {

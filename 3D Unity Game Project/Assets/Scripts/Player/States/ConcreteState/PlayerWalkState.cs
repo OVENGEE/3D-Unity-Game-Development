@@ -114,8 +114,13 @@ public class PlayerWalkState : PlayerState
         }
     }
 
-    //Event Handlers
+    public void FOVTransition(float newFOV)
+    {
+        float initialFOV = base.player.camera.fieldOfView;
+        base.player.camera.fieldOfView = Mathf.Lerp(initialFOV, newFOV, 0.5f);
+    }
 
+    //Event Handlers
     private void OnCrouch(InputAction.CallbackContext context)
     {
         playerStateMachine.SwitchState(new PlayerCrouchState(player, playerStateMachine));
