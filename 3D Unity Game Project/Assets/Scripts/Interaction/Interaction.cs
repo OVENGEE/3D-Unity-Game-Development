@@ -16,6 +16,12 @@ public class Interaction : MonoBehaviour
     [SerializeField] private float InteractRange = 5f;
     [SerializeField] private LayerMask interactLayer;
 
+
+    //Raycast variables
+    RaycastHit hit;
+    Ray ray;
+
+
     //private flags
     private bool _canInteract;
 
@@ -47,16 +53,18 @@ public class Interaction : MonoBehaviour
     //Event Handlers
     private void OnInteract(InputAction.CallbackContext context)
     {
+        //if cannot interact then exit function!
         if (!_canInteract) return;
 
+        //Checks if the interactable object contains this script!
+        if (!hit.transform.TryGetComponent(out InteractableObject interactable)) return;
+        interactable.Interact();
         Debug.Log("Interacted!");
     }
 
     private void OnViewInteractable(InputAction.CallbackContext context)
     {
-        RaycastHit hit;
-        Ray ray = new Ray(InteractCamera.transform.position, InteractCamera.transform.forward);
-
+        ray = new Ray(InteractCamera.transform.position, InteractCamera.transform.forward);
 
         //checks if raycast has hit any object with the interact layer
         if (!Physics.Raycast(ray, out hit, InteractRange, interactLayer))
