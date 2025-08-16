@@ -15,6 +15,7 @@ public class Interaction : MonoBehaviour
     [Header("Interact settings")]
     [SerializeField] private float InteractRange = 5f;
     [SerializeField] private LayerMask interactLayer;
+    [SerializeField] private GameObject interactSlider;
 
 
     //Raycast variables
@@ -70,8 +71,13 @@ public class Interaction : MonoBehaviour
         if (!Physics.Raycast(ray, out hit, InteractRange, interactLayer))
         {
             _canInteract = false;
+            interactSlider.SetActive(_canInteract);
         }
-        else _canInteract = true;
+        else
+        {
+            _canInteract = true;
+            interactSlider.SetActive(_canInteract);
+        }
         
     }
 
@@ -80,11 +86,17 @@ public class Interaction : MonoBehaviour
     void NullChecks()
     {
 
-        if (InteractCamera == null)
+        if (interactSlider == null)
         {
-            Debug.Log("InteractCamera has not been assigned in the inspector!");
+            Debug.Log("the slider has not been assigned inspector! Interaction script");
             return;
         }
+
+        if (InteractCamera == null)
+            {
+                Debug.Log("InteractCamera has not been assigned in the inspector!");
+                return;
+            }
 
 
         //Checks if input null assign new instance

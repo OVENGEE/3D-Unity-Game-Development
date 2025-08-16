@@ -39,6 +39,7 @@ public class Player : MonoBehaviour
 
     //UI dependancies
     public TextMeshProUGUI stateText;
+    public GameObject InteractSlider;
 
     [Header("PickUp Settings")]
     public float PickUpRange = 3f;
@@ -48,6 +49,8 @@ public class Player : MonoBehaviour
     [Header("Throwing Settings")]
     public float throwForce = 10;
     public float throwUpwardBoost = 1f;
+
+
 
 
 
@@ -78,6 +81,12 @@ public class Player : MonoBehaviour
         if (camera == null)
         {
             camera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+        }
+
+        if (InteractSlider == null)
+        {
+            Debug.Log("the slider is not assigned to the Player inspector!");
+            return;
         }
     }
 
@@ -174,8 +183,10 @@ public class Player : MonoBehaviour
 
     public void SwitchToShootState()
     {
+        InteractSlider.SetActive(false);
         StateMachine.SwitchState(ShootState);
     }
+
 
 
 
