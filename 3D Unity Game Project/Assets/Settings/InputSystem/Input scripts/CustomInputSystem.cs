@@ -169,7 +169,7 @@ public partial class @CustomInputSystem: IInputActionCollection2, IDisposable
                     ""id"": ""9d4fb75b-9fa9-4f0b-a07c-a03a8e66568f"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": ""Hold"",
+                    ""interactions"": """",
                     ""initialStateCheck"": false
                 }
             ],
