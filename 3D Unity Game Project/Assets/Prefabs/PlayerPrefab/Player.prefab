@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4056018476897854343
 Transform:
   m_ObjectHideFlags: 0
@@ -383,6 +383,7 @@ GameObject:
   - component: {fileID: 3451664310932440005}
   - component: {fileID: 7159366917797426939}
   - component: {fileID: 482886390484647461}
+  - component: {fileID: 8646150313899412435}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -500,6 +501,7 @@ MonoBehaviour:
   canSprint: 1
   sprintCooldown: 1
   camera: {fileID: 0}
+  stateText: {fileID: 0}
 --- !u!114 &482886390484647461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -513,6 +515,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mouseSensitivity: 60
+--- !u!114 &8646150313899412435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2501781711479371949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c555a6e61db565b48963fd19e3ef70a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InteractCamera: {fileID: 8827171080623609759}
+  InteractRange: 5
+  interactLayer:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!1 &9067988255769090250
 GameObject:
   m_ObjectHideFlags: 0

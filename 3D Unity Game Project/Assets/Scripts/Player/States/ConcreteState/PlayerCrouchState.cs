@@ -11,6 +11,9 @@ public class PlayerCrouchState : PlayerWalkState
     float baseFOV;
 
 
+    //Crouch variables
+    float crouchFOV = 15f;
+
     public PlayerCrouchState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
     }
@@ -26,30 +29,29 @@ public class PlayerCrouchState : PlayerWalkState
         base.player.stateText.text = "Crouch";
 
         //Getting FOV before crouching
-        
-
+        baseFOV = base.player.camera.fieldOfView;
+        base.FOVTransition(crouchFOV); //change to crouch FOV
         if (crouch == null)
         {
             crouch = base.player.inputs.Player.Crouch;
         }
+
+        //Events subscriptions
+        crouch.canceled += OnUnCrouch;
     }
 
     public override void ExitState()
     {
         base.ExitState();
-        base.controller.height = 2f;
-        Debug.Log("left crouch state!");
+        base.controller.height = 2f; //Return back to standing height
+        base.FOVTransition(baseFOV); //return to base FOV
+        //Events unsubscriptions
+        crouch.canceled -= OnUnCrouch;
     }
 
     public override void FrameUpdate()
     {
         base.FrameUpdate();
-        
-        if (!crouch.IsPressed())
-        {
-            //Transition back to walking state if not crouching
-            playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
-        }
     }
 
     public override void PhysicsUpdate()
@@ -61,9 +63,17 @@ public class PlayerCrouchState : PlayerWalkState
     public void HandleCrouch()
     {
         float crouchHeight = 1f;
-        base.controller.height = crouchHeight;
+        base.controller.height = crouchHeight; //set crouch height
         float crouchSpeed = -0.5f * (base.player.MoveSpeed);//Crouch movement speed
 
         base.controller.Move(base.move * crouchSpeed * Time.deltaTime);
+    }
+
+    //Event Handlers
+
+    private void OnUnCrouch(InputAction.CallbackContext context)
+    {
+        //Transition back to walking state if not crouching
+        playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
     }
 }
