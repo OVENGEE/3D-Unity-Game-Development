@@ -1,16 +1,17 @@
 using UnityEngine;
+using UnityEngine.Events;
 
-public class IInteractable : MonoBehaviour
+public interface IInteractable
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public UnityEvent onInteract { get; protected set; }
+    public void Interact();
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
+
+//Code references:
+// 1)Title: Interactions with Unity Events - New Input System
+//  Author: ErenCode
+//  Date accessed:  16/08/2025
+//  Availability: https://www.youtube.com/watch?v=ZNiEbRL85Vc
+
+// This helped me with the the logic for interactions!
