@@ -1,7 +1,5 @@
-
 using System;
 using System.Collections;
-using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -40,7 +38,16 @@ public class Player : MonoBehaviour
     //UI dependancies
     public TextMeshProUGUI stateText;
 
-    public GameObject crosshairImage;
+    [Header("PickUp Settings")]
+    public float PickUpRange = 3f;
+    public Transform holdPoint;
+    private PickUpObject heldObject;
+
+    [Header("Throwing Settings")]
+    public float throwForce = 10;
+    public float throwUpwardBoost = 1f;
+
+
 
     void Awake()
     {
@@ -86,6 +93,10 @@ public class Player : MonoBehaviour
                 Debug.Log("Sprint rest, cooldown done!");
             }
         }
+        if (heldObject != null)
+        {
+            heldObject.MoveToHoldPoint(holdPoint.position);
+        }
     }
 
     void FixedUpdate()
@@ -104,19 +115,42 @@ public class Player : MonoBehaviour
         canSprint = false;
         sprintCooldownTimer = sprintCooldown;
     }
-
-    public void SwitchToShootState()
+    
+     public void OnPickUp(InputAction.CallbackContext context)
     {
-        
+        if (!context.performed) return;
 
-        MeshRenderer meshRenderer = GameObject.FindGameObjectWithTag("Gun").GetComponent<MeshRenderer>();
-        meshRenderer.enabled = true; //Enables gun for viewing
-
-        crosshairImage= GameObject.Find("Crosshair");
-
-        //switches to the shoot state
-        StateMachine.SwitchState(ShootState);
+        if (heldObject == null)
+        {
+            Ray ray = new Ray(camera.transform.position, camera.transform.forward);
+            if (Physics.Raycast(ray, out RaycastHit hit, PickUpRange))
+            {
+                PickUpObject pickUp = hit.collider.GetComponent<PickUpObject>();
+                if (pickUp != null)
+                {
+                    pickUp.PickUp(holdPoint);
+                    heldObject = pickUp;
+                }
+            }
+        }
+        else
+        {
+            heldObject.Drop();
+            heldObject = null;
+        }
     }
+
+    public void OnThrow(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        if (heldObject == null) return;
+
+        Vector3 dir = camera.transform.forward;
+        Vector3 impulse = dir * throwForce + Vector3.up * throwUpwardBoost;
+
+        heldObject.Throw(impulse);
+        heldObject = null;
+    } 
 
 
     #region Animation Triggers
