@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Target
   - Interactable
+  - PickUp
   layers:
   - Default
   - TransparentFX
