@@ -631,7 +631,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
-  m_FillAmount: 1
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -989,7 +989,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 160}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1233033499
 MonoBehaviour:
@@ -1038,7 +1038,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1054,10 +1054,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dcd094833bc8654d94540f31bfd558a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interact: {fileID: 0}
-  HoldConfirmedcolor: {r: 0, g: 1, b: 0, a: 1}
-  HoldCanceledcolor: {r: 1, g: 0, b: 0, a: 1}
-  HoldStartedcolor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  interact: {fileID: -129013120155012322, guid: afd1ba5921ccde848b6b849828297f33, type: 3}
+  ResetDelay: 0.3
 --- !u!1 &1318928665
 GameObject:
   m_ObjectHideFlags: 0
