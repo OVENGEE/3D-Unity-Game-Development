@@ -16,6 +16,9 @@ public class Interaction : MonoBehaviour
     [SerializeField] private float InteractRange = 5f;
     [SerializeField] private LayerMask interactLayer;
 
+    //private flags
+    private bool _canInteract;
+
     private void Awake()
     {
         NullChecks();
@@ -44,7 +47,9 @@ public class Interaction : MonoBehaviour
     //Event Handlers
     private void OnInteract(InputAction.CallbackContext context)
     {
-        
+        if (!_canInteract) return;
+
+        Debug.Log("Interacted!");
     }
 
     private void OnViewInteractable(InputAction.CallbackContext context)
@@ -52,8 +57,14 @@ public class Interaction : MonoBehaviour
         RaycastHit hit;
         Ray ray = new Ray(InteractCamera.transform.position, InteractCamera.transform.forward);
 
-        if (!Physics.Raycast(ray, out hit, InteractRange, interactLayer)) return;
-        Debug.Log("Interact");
+
+        //checks if raycast has hit any object with the interact layer
+        if (!Physics.Raycast(ray, out hit, InteractRange, interactLayer))
+        {
+            _canInteract = false;
+        }
+        else _canInteract = true;
+        
     }
 
     
