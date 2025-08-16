@@ -53,7 +53,7 @@ public class FPController : MonoBehaviour
         HandleMovement();
         HandleLook();
 
-        if (heldObject != null)
+       if (heldObject != null)
         {
             heldObject.MoveToHoldPoint(holdPoint.position);
         }

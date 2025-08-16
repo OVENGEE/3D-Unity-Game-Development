@@ -67,6 +67,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "RotateObject",
+                    "type": "Value",
+                    "id": "f0599607-9c4f-440d-aeb7-a6a249103bb1",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -364,6 +373,17 @@
                     "processors": "",
                     "groups": ";GamePad",
                     "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f4ef0c57-0d16-497a-8055-26cab726c279",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard",
+                    "action": "RotateObject",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

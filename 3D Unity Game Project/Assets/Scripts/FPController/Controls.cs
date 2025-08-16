@@ -153,6 +153,15 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotateObject"",
+                    ""type"": ""Value"",
+                    ""id"": ""f0599607-9c4f-440d-aeb7-a6a249103bb1"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -452,6 +461,17 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""action"": ""Throw"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f4ef0c57-0d16-497a-8055-26cab726c279"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard"",
+                    ""action"": ""RotateObject"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -495,6 +515,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_Player_PickUp = m_Player.FindAction("PickUp", throwIfNotFound: true);
         m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
         m_Player_Throw = m_Player.FindAction("Throw", throwIfNotFound: true);
+        m_Player_RotateObject = m_Player.FindAction("RotateObject", throwIfNotFound: true);
     }
 
     ~@Controls()
@@ -582,6 +603,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_PickUp;
     private readonly InputAction m_Player_Crouch;
     private readonly InputAction m_Player_Throw;
+    private readonly InputAction m_Player_RotateObject;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -621,6 +643,10 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Throw".
         /// </summary>
         public InputAction @Throw => m_Wrapper.m_Player_Throw;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/RotateObject".
+        /// </summary>
+        public InputAction @RotateObject => m_Wrapper.m_Player_RotateObject;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -668,6 +694,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Throw.started += instance.OnThrow;
             @Throw.performed += instance.OnThrow;
             @Throw.canceled += instance.OnThrow;
+            @RotateObject.started += instance.OnRotateObject;
+            @RotateObject.performed += instance.OnRotateObject;
+            @RotateObject.canceled += instance.OnRotateObject;
         }
 
         /// <summary>
@@ -700,6 +729,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Throw.started -= instance.OnThrow;
             @Throw.performed -= instance.OnThrow;
             @Throw.canceled -= instance.OnThrow;
+            @RotateObject.started -= instance.OnRotateObject;
+            @RotateObject.performed -= instance.OnRotateObject;
+            @RotateObject.canceled -= instance.OnRotateObject;
         }
 
         /// <summary>
@@ -815,5 +847,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnThrow(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RotateObject" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRotateObject(InputAction.CallbackContext context);
     }
 }
