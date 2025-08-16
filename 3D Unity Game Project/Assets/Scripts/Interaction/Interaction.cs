@@ -57,7 +57,7 @@ public class Interaction : MonoBehaviour
         if (!_canInteract) return;
 
         //Checks if the interactable object contains this script!
-        if (!hit.transform.TryGetComponent(out InteractableObject interactable)) return;
+        if (!hit.transform.TryGetComponent(out IInteractable interactable)) return;
         interactable.Interact();
         Debug.Log("Interacted!");
     }
