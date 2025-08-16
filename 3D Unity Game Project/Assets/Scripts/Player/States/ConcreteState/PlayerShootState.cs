@@ -24,6 +24,7 @@ public class PlayerShootState : PlayerState
         base.EnterState();
         range = 20f;
         camera = base.player.camera;
+        base.player.stateText.text = "Shooting!";
 
         if (shootAction == null)
         {

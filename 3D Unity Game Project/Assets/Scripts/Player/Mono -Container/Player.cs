@@ -24,6 +24,8 @@ public class Player : MonoBehaviour
 
     //Input 
     public CustomInputSystem inputs;
+    private InputAction throwAction;
+    private InputAction pickUpAction;
 
     //Sprint variables
     [Header("Sprint Variables")]
@@ -37,6 +39,7 @@ public class Player : MonoBehaviour
 
     //UI dependancies
     public TextMeshProUGUI stateText;
+    public GameObject InteractSlider;
 
     [Header("PickUp Settings")]
     public float PickUpRange = 3f;
@@ -46,6 +49,8 @@ public class Player : MonoBehaviour
     [Header("Throwing Settings")]
     public float throwForce = 10;
     public float throwUpwardBoost = 1f;
+
+
 
 
 
@@ -61,11 +66,27 @@ public class Player : MonoBehaviour
         {
             inputs = new CustomInputSystem();
             Debug.Log("Custom input new instance made!");
+
+            if (throwAction == null)
+            {
+                throwAction = inputs.Player.Throw;
+            }
+
+            if (pickUpAction == null)
+            {
+                pickUpAction = inputs.Player.PickUp;
+            }
         }
 
         if (camera == null)
         {
             camera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+        }
+
+        if (InteractSlider == null)
+        {
+            Debug.Log("the slider is not assigned to the Player inspector!");
+            return;
         }
     }
 
@@ -76,7 +97,10 @@ public class Player : MonoBehaviour
 
     public void OnEnable()
     {
+        //Enable input and subscribe events
         inputs.Enable();
+        throwAction.performed += OnThrow;
+        pickUpAction.performed += OnPickUp;
     }
 
     void Update()
@@ -106,6 +130,9 @@ public class Player : MonoBehaviour
 
     public void OnDisable()
     {
+        //Unsubscribe the events and disable input
+        throwAction.performed -= OnThrow;
+        pickUpAction.performed -= OnPickUp;
         inputs.Disable();
     }
 
@@ -115,8 +142,10 @@ public class Player : MonoBehaviour
         canSprint = false;
         sprintCooldownTimer = sprintCooldown;
     }
-    
-     public void OnPickUp(InputAction.CallbackContext context)
+
+    //Event Handlers
+
+    public void OnPickUp(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
 
@@ -150,7 +179,16 @@ public class Player : MonoBehaviour
 
         heldObject.Throw(impulse);
         heldObject = null;
-    } 
+    }
+
+    public void SwitchToShootState()
+    {
+        InteractSlider.SetActive(false);
+        StateMachine.SwitchState(ShootState);
+    }
+
+
+
 
 
     #region Animation Triggers
