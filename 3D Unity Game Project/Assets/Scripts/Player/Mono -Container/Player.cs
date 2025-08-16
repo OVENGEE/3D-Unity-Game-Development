@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -39,7 +40,7 @@ public class Player : MonoBehaviour
     //UI dependancies
     public TextMeshProUGUI stateText;
 
-
+    public GameObject crosshairImage;
 
     void Awake()
     {
@@ -102,6 +103,19 @@ public class Player : MonoBehaviour
         //Starts the sprintCooldown;
         canSprint = false;
         sprintCooldownTimer = sprintCooldown;
+    }
+
+    public void SwitchToShootState()
+    {
+        
+
+        MeshRenderer meshRenderer = GameObject.FindGameObjectWithTag("Gun").GetComponent<MeshRenderer>();
+        meshRenderer.enabled = true; //Enables gun for viewing
+
+        crosshairImage= GameObject.Find("Crosshair");
+
+        //switches to the shoot state
+        StateMachine.SwitchState(ShootState);
     }
 
 

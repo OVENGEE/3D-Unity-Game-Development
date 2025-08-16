@@ -5,7 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Target
-  - Interactable
+  - Gun
   layers:
   - Default
   - TransparentFX
