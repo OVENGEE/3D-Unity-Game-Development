@@ -74,3 +74,8 @@ public class PlayerCrouchState : PlayerWalkState
         playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
     }
 }
+// Code references:
+// 2)Title: A Better Way to Code Your Characters in Unity | Finite State Machine | Tutorial
+//  Author: Sasquatch B Studios
+//  Date accessed:  17/08/2025
+//  Availability: https://www.youtube.com/watch?v=RQd44qSaqww&ab_channel=SasquatchBStudios

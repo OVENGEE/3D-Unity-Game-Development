@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerWalkState : PlayerState
 {
@@ -21,6 +22,9 @@ public class PlayerWalkState : PlayerState
     protected Vector3 move;
     protected CharacterController controller;
 
+    // Player references
+    protected Slider slider;
+
 
     public PlayerWalkState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
@@ -29,10 +33,9 @@ public class PlayerWalkState : PlayerState
     {
         base.EnterState();
         controller = base.player.GetComponent<CharacterController>();
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        slider = base.player.StaminaSlider.GetComponent<Slider>();
         NullChecks();
-        base.player.stateText.text = "Walking";
+        base.player.stateText.text = "Walk";
 
         //Event Subscriptions
         crouchAction.performed += OnCrouch;
@@ -136,3 +139,9 @@ public class PlayerWalkState : PlayerState
         HandleJump();
     }
 }
+
+// Code references:
+// 1)Title: A Better Way to Code Your Characters in Unity | Finite State Machine | Tutorial
+//  Author: Sasquatch B Studios
+//  Date accessed:  3/08/2025
+//  Availability: https://www.youtube.com/watch?v=RQd44qSaqww&ab_channel=SasquatchBStudios
