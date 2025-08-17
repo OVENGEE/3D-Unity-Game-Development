@@ -8,7 +8,6 @@ public class PlayerCrouchState : PlayerWalkState
     InputAction crouch;
 
     //Camera settings
-    float baseFOV;
 
 
     //Crouch variables
@@ -28,8 +27,6 @@ public class PlayerCrouchState : PlayerWalkState
         base.EnterState();
         base.player.stateText.text = "Crouch";
 
-        //Getting FOV before crouching
-        baseFOV = base.player.camera.fieldOfView;
         base.FOVTransition(crouchFOV); //change to crouch FOV
         if (crouch == null)
         {
@@ -44,7 +41,7 @@ public class PlayerCrouchState : PlayerWalkState
     {
         base.ExitState();
         base.controller.height = 2f; //Return back to standing height
-        base.FOVTransition(baseFOV); //return to base FOV
+        base.FOVTransition(60f); //return to base FOV
         //Events unsubscriptions
         crouch.canceled -= OnUnCrouch;
     }

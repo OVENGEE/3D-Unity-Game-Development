@@ -12,7 +12,6 @@ public class PlayerSprintState : PlayerWalkState
     float sprintTimer = 0f;
 
     //FOV variables
-    float baseFOV = 0f;
     float sprintFOV = 90f;
 
     public PlayerSprintState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
@@ -23,7 +22,6 @@ public class PlayerSprintState : PlayerWalkState
     {
         base.EnterState();
         sprintTimer = 0f;
-        baseFOV = base.player.camera.fieldOfView;
         base.player.stateText.text = "Sprinting";
 
         if (sprintAction == null)
@@ -40,7 +38,7 @@ public class PlayerSprintState : PlayerWalkState
     {
         base.ExitState();
 
-        base.FOVTransition(baseFOV);
+        base.FOVTransition(60f);
         base.controller.Move(base.move * -base.player.MoveSpeed * Time.deltaTime);
         Debug.Log("Left Sprint State!");
 

@@ -50,6 +50,9 @@ public class Player : MonoBehaviour
     public float throwForce = 10;
     public float throwUpwardBoost = 1f;
 
+    [Header("Gun Settings")]
+
+    [SerializeField] GameObject tempGun;
 
 
 
@@ -86,6 +89,12 @@ public class Player : MonoBehaviour
         if (InteractSlider == null)
         {
             Debug.Log("the slider is not assigned to the Player inspector!");
+            return;
+        }
+
+        if (tempGun == null)
+        {
+            Debug.Log("the tempGun is not assigned to the Player inspector!");
             return;
         }
     }
@@ -185,6 +194,7 @@ public class Player : MonoBehaviour
     {
         InteractSlider.SetActive(false);
         StateMachine.SwitchState(ShootState);
+        tempGun.SetActive(true);
     }
 
 
