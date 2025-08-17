@@ -9,6 +9,7 @@ TagManager:
   - Gun
   - Target
   - PickUp
+  - Quit
   layers:
   - Default
   - TransparentFX

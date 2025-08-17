@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4056018476897854343
 Transform:
   m_ObjectHideFlags: 0
@@ -386,6 +386,8 @@ GameObject:
   - component: {fileID: 7159366917797426939}
   - component: {fileID: 482886390484647461}
   - component: {fileID: 8646150313899412435}
+  - component: {fileID: 6777316130774676672}
+  - component: {fileID: 1369706579384073308}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -501,7 +503,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 5
   canSprint: 1
-  MaxStamina: 4
+  MaxStamina: 3
   ChargeRate: 33
   camera: {fileID: 0}
   stateText: {fileID: 0}
@@ -542,8 +544,41 @@ MonoBehaviour:
   InteractRange: 5
   interactLayer:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 128
   interactSlider: {fileID: 0}
+--- !u!114 &6777316130774676672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2501781711479371949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3841475baad8204b9dba981fa1bc3a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &1369706579384073308
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2501781711479371949}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 2, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3681491611987364891
 GameObject:
   m_ObjectHideFlags: 0
@@ -617,7 +652,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5273522747723515333}
   serializedVersion: 8
-  lengthInSec: 5
+  lengthInSec: 0.5
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -626,7 +661,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -692,7 +727,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.05
+      scalar: 0.01
       minScalar: 5
       maxCurve:
         serializedVersion: 2

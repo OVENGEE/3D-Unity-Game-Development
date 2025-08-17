@@ -8,6 +8,9 @@ public class MouseMovement : MonoBehaviour
     CustomInputSystem inputs;
     InputAction lookAction;
 
+    //Pointer info
+    [SerializeField] GameObject selectedObject;
+
 
     //Mouse settings
     public float mouseSensitivity = 100f;
@@ -28,6 +31,12 @@ public class MouseMovement : MonoBehaviour
             }
         }
 
+        if (selectedObject == null)
+        {
+            Debug.Log("SelectedObject has not been assigned in the inspector!");
+            return;
+        }
+
         //Locking the cursor to the middle of the screen 
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -41,7 +50,7 @@ public class MouseMovement : MonoBehaviour
     void Update()
     {
         //Checks if the pointer is on a UI element if so make it appear!
-        if (EventSystem.current.IsPointerOverGameObject())
+        if (EventSystem.current.IsPointerOverGameObject() && selectedObject.tag == "Quit")
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
