@@ -4,10 +4,8 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Target
-  - Interactable
-  - PickUp
-  - Gun
+  - Pickup
+  - canPickUp
   layers:
   - Default
   - TransparentFX
@@ -15,11 +13,11 @@ TagManager:
   - 
   - Water
   - UI
+  - holdLayer
   - 
   - 
-  - Player
-  - NPC
-  - Interactable
+  - 
+  - 
   - 
   - 
   - 
