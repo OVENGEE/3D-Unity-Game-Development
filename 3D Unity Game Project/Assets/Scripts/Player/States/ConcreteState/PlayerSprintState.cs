@@ -8,7 +8,7 @@ public class PlayerSprintState : PlayerWalkState
     InputAction sprintAction;
 
     //Sprint variables
-    float sprintDuration = 2f;
+    float sprintDuration = 4f;
     float sprintTimer = 0f;
 
     //FOV variables
