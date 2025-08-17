@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Pickup
   - canPickUp
+  - Gun
+  - Target
+  - PickUp
   layers:
   - Default
   - TransparentFX
@@ -14,7 +17,7 @@ TagManager:
   - Water
   - UI
   - holdLayer
-  - 
+  - Interactable
   - 
   - 
   - 

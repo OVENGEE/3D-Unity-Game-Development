@@ -8,7 +8,7 @@ public class PlayerWalkState : PlayerState
 {
     //Constants
     const float GRAVITY = -9.81f;
-    const float JUMPHEIGHT = 1.5f;
+    const float JUMPHEIGHT = 2f;
 
     //Input
     InputAction moveAction;
@@ -33,7 +33,7 @@ public class PlayerWalkState : PlayerState
     {
         base.EnterState();
         controller = base.player.GetComponent<CharacterController>();
-        slider = base.player.StaminaSlider.GetComponent<Slider>();
+        slider = base.player.StaminaSlider;
         NullChecks();
         base.player.stateText.text = "Walk";
 

@@ -73,7 +73,7 @@ public class PlayerSprintState : PlayerWalkState
     {
         base.PhysicsUpdate();
         //Sprint movement logic
-        base.controller.Move(base.move * base.player.MoveSpeed * Time.deltaTime);
+        base.controller.Move(base.move *0.5f* base.player.MoveSpeed * Time.deltaTime);
 
         //change the fov
         base.FOVTransition(sprintFOV);
