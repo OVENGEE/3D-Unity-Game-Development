@@ -84,14 +84,15 @@ public class PlayerSprintState : PlayerWalkState
         base.AnimationTriggerEvent();
     }
 
-    public IEnumerator StaminaRecover   (float currentStamina)
+    public IEnumerator StaminaRecover(float currentStamina)
     {
         yield return new WaitForSeconds(1f);
 
+        //Add a proper recovery multipler later
         staminaTimer = currentStamina;
         while (staminaTimer < MaxStamina)
         {
-            staminaTimer += ChargeRate * 0.05f* Time.deltaTime;
+            staminaTimer += ChargeRate * Time.deltaTime;
             if (staminaTimer > MaxStamina) staminaTimer = MaxStamina;
             base.player.StaminaSlider.value = staminaTimer / MaxStamina;
             yield return null;

@@ -59,6 +59,8 @@ public class Player : MonoBehaviour
     [Header("Gun Settings")]
 
     public GameObject tempGun;
+    public ParticleSystem muzzleflash;
+
 
 
 
@@ -204,6 +206,12 @@ public class Player : MonoBehaviour
         if (tempGun == null)
         {
             Debug.Log("the tempGun is not assigned to the Player inspector!");
+            return;
+        }
+
+        if (muzzleflash == null)
+        {
+            Debug.Log("the Particle system is not assigned to the player inspector!");
             return;
         }
     }

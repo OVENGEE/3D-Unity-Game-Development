@@ -1,104 +1,105 @@
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.InputSystem;
+    using Unity.VisualScripting;
+    using UnityEditor;
+    using UnityEngine;
+    using UnityEngine.InputSystem;
 
-public class PlayerShootState : PlayerState
-{
-    //Shoot references
-    private float firetimer;
-    private float range;
-    private Camera camera;
-    Ray debugray;
-    bool shoot;
-
-    //Input actions
-    InputAction shootAction;
-    InputAction moveAction;
-
-    public PlayerShootState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
+    public class PlayerShootState : PlayerState
     {
-    }
+        //Shoot references
+        private float firetimer;
+        private float range;
+        private Camera camera;
+        Ray debugray;
+        bool shoot;
 
-    public override void EnterState()
-    {
-        base.EnterState();
-        range = 20f;
-        camera = base.player.camera;
-        base.player.stateText.text = "Shooting!";
+        //Input actions
+        InputAction shootAction;
+        InputAction moveAction;
 
-        if (shootAction == null)
+        public PlayerShootState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
         {
-            shootAction = base.player.inputs.Player.Shoot;
         }
 
-        if (moveAction == null)
+        public override void EnterState()
         {
-            moveAction = base.player.inputs.Player.Move;
-        }
+            base.EnterState();
+            range = 20f;
+            camera = base.player.camera;
+            base.player.stateText.text = "Shoot!";
 
-        //Event Subscriptions
-        shootAction.performed += OnshootFunction;
-        moveAction.performed += OnExitShootState;
-    }
-
-    public override void ExitState()
-    {
-        base.ExitState();
-
-
-        //Event unSubscriptions
-        shootAction.performed -= OnshootFunction;
-        moveAction.performed -= OnExitShootState;
-    }
-
-    public override void PhysicsUpdate()
-    {
-        base.PhysicsUpdate();
-    }
-
-    public override void FrameUpdate()
-    {
-        base.FrameUpdate();
-        firetimer -= Time.deltaTime;
-    }
-
-    public override void AnimationTriggerEvent()
-    {
-        base.AnimationTriggerEvent();
-    }
-
-    void OnshootFunction(InputAction.CallbackContext context)
-    {
-        RaycastHit hit;
-        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
-        debugray = ray;
-        Debug.Log("Shots fired!");
-        //Play animation and    particle effect
-        if (Physics.Raycast(ray, out hit, range))
-        {
-
-            GameObject target = hit.collider.gameObject;
-            if (target.tag == "Target")
+            if (shootAction == null)
             {
-                Debug.Log($"{hit.collider.name} has been hit!");
-                GameObject.Destroy(target);
+                shootAction = base.player.inputs.Player.Shoot;
             }
 
+            if (moveAction == null)
+            {
+                moveAction = base.player.inputs.Player.Move;
+            }
+
+            //Event Subscriptions
+            shootAction.performed += OnshootFunction;
+            moveAction.performed += OnExitShootState;
         }
 
-        firetimer = 0.1f;
+        public override void ExitState()
+        {
+            base.ExitState();
+
+
+            //Event unSubscriptions
+            shootAction.performed -= OnshootFunction;
+            moveAction.performed -= OnExitShootState;
+        }
+
+        public override void PhysicsUpdate()
+        {
+            base.PhysicsUpdate();
+        }
+
+        public override void FrameUpdate()
+        {
+            base.FrameUpdate();
+            firetimer -= Time.deltaTime;
+        }
+
+        public override void AnimationTriggerEvent()
+        {
+            base.AnimationTriggerEvent();
+        }
+
+        void OnshootFunction(InputAction.CallbackContext context)
+        {
+            RaycastHit hit;
+            Ray ray = new Ray(camera.transform.position, camera.transform.forward);
+
+            //Play animation and    particle effect
+            base.player.muzzleflash.Play();
+
+            if (Physics.Raycast(ray, out hit, range))
+            {
+
+                GameObject target = hit.collider.gameObject;
+                if (target.tag == "Target")
+                {
+                    Debug.Log($"{hit.collider.name} has been hit!");
+                    GameObject.Destroy(target);
+                }
+
+            }
+
+            firetimer = 0.1f;
+        }
+
+
+        private void OnExitShootState(InputAction.CallbackContext context)
+        {
+            //Switch to the walking state!
+            base.player.tempGun.SetActive(false);
+            playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
+        }
+
     }
-
-
-    private void OnExitShootState(InputAction.CallbackContext context)
-    {
-        //Switch to the walking state!
-        base.player.tempGun.SetActive(false);
-        playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
-    }
-
-}
 
 //Code references:
 // 1)Title: Unity - Shooting in Unity | Raycasting - (10 Minute tutorial - 2022 UPDATED)
