@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
+using System.Collections;
 
 public class Player : MonoBehaviour
 {
@@ -30,16 +32,20 @@ public class Player : MonoBehaviour
     //Sprint variables
     [Header("Sprint Variables")]
     public bool canSprint = true;
-    public float sprintCooldown = 1f;
-
-    private float sprintCooldownTimer = 0f;
+    public float MaxStamina = 4f;
+    public float ChargeRate = 33f;
+    public Coroutine recharge;  
+    private float staminaTimer = 0f;
+    
 
     //Camera reference
     public Camera camera;
 
     //UI dependancies
+    [Header("UI references")]
     public TextMeshProUGUI stateText;
     public GameObject InteractSlider;
+    public Slider StaminaSlider;
 
     [Header("PickUp Settings")]
     public float PickUpRange = 3f;
@@ -49,6 +55,11 @@ public class Player : MonoBehaviour
     [Header("Throwing Settings")]
     public float throwForce = 10;
     public float throwUpwardBoost = 1f;
+
+    [Header("Gun Settings")]
+
+    public GameObject tempGun;
+    public ParticleSystem muzzleflash;
 
 
 
@@ -61,33 +72,7 @@ public class Player : MonoBehaviour
         CrouchState = new PlayerCrouchState(this, StateMachine);
         ShootState = new PlayerShootState(this, StateMachine);
         SprintState = new PlayerSprintState(this, StateMachine);
-
-        if (inputs == null)
-        {
-            inputs = new CustomInputSystem();
-            Debug.Log("Custom input new instance made!");
-
-            if (throwAction == null)
-            {
-                throwAction = inputs.Player.Throw;
-            }
-
-            if (pickUpAction == null)
-            {
-                pickUpAction = inputs.Player.PickUp;
-            }
-        }
-
-        if (camera == null)
-        {
-            camera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
-        }
-
-        if (InteractSlider == null)
-        {
-            Debug.Log("the slider is not assigned to the Player inspector!");
-            return;
-        }
+        NullChecks();
     }
 
     void Start()
@@ -107,16 +92,8 @@ public class Player : MonoBehaviour
     {
         StateMachine.CurrentPlayerState.FrameUpdate();
 
-        //This reset the cooldown of the sprint state even if you are not in the sprint state
-        if (!canSprint)
-        {
-            sprintCooldownTimer -= Time.deltaTime;
-            if (sprintCooldownTimer <= 0f)
-            {
-                canSprint = true;
-                Debug.Log("Sprint rest, cooldown done!");
-            }
-        }
+
+
         if (heldObject != null)
         {
             heldObject.MoveToHoldPoint(holdPoint.position);
@@ -136,12 +113,7 @@ public class Player : MonoBehaviour
         inputs.Disable();
     }
 
-    public void StartSprintCooldown()
-    {
-        //Starts the sprintCooldown;
-        canSprint = false;
-        sprintCooldownTimer = sprintCooldown;
-    }
+
 
     //Event Handlers
 
@@ -185,6 +157,63 @@ public class Player : MonoBehaviour
     {
         InteractSlider.SetActive(false);
         StateMachine.SwitchState(ShootState);
+        tempGun.SetActive(true);
+    }
+
+    public IEnumerator StaminaRecover   (float currentStamina)
+    {
+        yield return new WaitForSeconds(1f);
+
+        staminaTimer = currentStamina;
+        while (staminaTimer < MaxStamina)
+        {
+            staminaTimer += ChargeRate / 10f;
+            if (staminaTimer > MaxStamina) staminaTimer = MaxStamina;
+            StaminaSlider.value = staminaTimer / MaxStamina;
+            yield return new WaitForSeconds(.1f);
+        }
+    }
+
+    private void NullChecks()
+    {
+        if (inputs == null)
+        {
+            inputs = new CustomInputSystem();
+            Debug.Log("Custom input new instance made!");
+
+            if (throwAction == null)
+            {
+                throwAction = inputs.Player.Throw;
+            }
+
+            if (pickUpAction == null)
+            {
+                pickUpAction = inputs.Player.PickUp;
+            }
+        }
+
+        if (camera == null)
+        {
+            camera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+        }
+
+        if (InteractSlider == null || StaminaSlider == null)
+        {
+            Debug.Log("the sliders is not assigned to the Player inspector!");
+            return;
+        }
+
+        if (tempGun == null)
+        {
+            Debug.Log("the tempGun is not assigned to the Player inspector!");
+            return;
+        }
+
+        if (muzzleflash == null)
+        {
+            Debug.Log("the Particle system is not assigned to the player inspector!");
+            return;
+        }
     }
 
 

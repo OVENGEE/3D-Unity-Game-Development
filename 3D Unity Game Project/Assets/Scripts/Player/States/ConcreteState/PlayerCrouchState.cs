@@ -8,7 +8,6 @@ public class PlayerCrouchState : PlayerWalkState
     InputAction crouch;
 
     //Camera settings
-    float baseFOV;
 
 
     //Crouch variables
@@ -28,8 +27,6 @@ public class PlayerCrouchState : PlayerWalkState
         base.EnterState();
         base.player.stateText.text = "Crouch";
 
-        //Getting FOV before crouching
-        baseFOV = base.player.camera.fieldOfView;
         base.FOVTransition(crouchFOV); //change to crouch FOV
         if (crouch == null)
         {
@@ -44,7 +41,7 @@ public class PlayerCrouchState : PlayerWalkState
     {
         base.ExitState();
         base.controller.height = 2f; //Return back to standing height
-        base.FOVTransition(baseFOV); //return to base FOV
+        base.FOVTransition(60f); //return to base FOV
         //Events unsubscriptions
         crouch.canceled -= OnUnCrouch;
     }
@@ -77,3 +74,8 @@ public class PlayerCrouchState : PlayerWalkState
         playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
     }
 }
+// Code references:
+// 2)Title: A Better Way to Code Your Characters in Unity | Finite State Machine | Tutorial
+//  Author: Sasquatch B Studios
+//  Date accessed:  17/08/2025
+//  Availability: https://www.youtube.com/watch?v=RQd44qSaqww&ab_channel=SasquatchBStudios

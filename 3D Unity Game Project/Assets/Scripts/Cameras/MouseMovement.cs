@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class MouseMovement : MonoBehaviour
 {
@@ -27,9 +28,8 @@ public class MouseMovement : MonoBehaviour
             }
         }
 
-        //Locking the cursor to the middle of the screen and making it invisible
+        //Locking the cursor to the middle of the screen 
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
     void OnEnable()
@@ -40,6 +40,19 @@ public class MouseMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Checks if the pointer is on a UI element if so make it appear!
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+
         //Mouse input directions
         float mouseX = lookAction.ReadValue<Vector2>().x * mouseSensitivity * Time.deltaTime;
         float mouseY = lookAction.ReadValue<Vector2>().y * mouseSensitivity * Time.deltaTime;
@@ -64,6 +77,13 @@ public class MouseMovement : MonoBehaviour
     }
 }
 
-//Code references:
-// The mouse movement and look mechanics for the player logic:https://www.youtube.com/watch?v=Nxg0vQk05os&list=PLtLToKUhgzwnk4U2eQYridNnObc2gqWo-
+// 2)Title: EventSystems
+//  Author: Chatpgt
+//  Date accessed:  16/08/2025
+//  Availability: https://chatgpt.com/c/68a1baed-8408-8330-b836-79bdfe824920
+
+// 1)Title: 3D Survival Game Tutorial | Unity | Part 1: Getting Started & Player Movement
+//  Author: Mike's Code
+//  Date accessed:  1/08/2025
+//  Availability: https://www.youtube.com/watch?v=Nxg0vQk05os&list=PLtLToKUhgzwnk4U2eQYridNnObc2gqWo-
 
