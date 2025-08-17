@@ -42,6 +42,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "PickUp",
+                    "type": "Button",
+                    "id": "1bb8f058-5e78-4f8f-b240-c6ff368016e5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Crouch",
                     "type": "Button",
                     "id": "8a6632ea-c5a7-4200-bf3f-91d5d8c895f9",
@@ -51,13 +60,22 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Pickup",
+                    "name": "Throw",
                     "type": "Button",
-                    "id": "1bb8f058-5e78-4f8f-b240-c6ff368016e5",
+                    "id": "8c99bdc7-0c27-4345-a9e6-e79c2e1370ff",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "RotateObject",
+                    "type": "Value",
+                    "id": "f0599607-9c4f-440d-aeb7-a6a249103bb1",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -317,11 +335,55 @@
                 {
                     "name": "",
                     "id": "ff465bfa-5bcc-4e87-84eb-ddb2a97f3ba7",
-                    "path": "",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "Pickup",
+                    "groups": ";Keyboard",
+                    "action": "PickUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "53a9c068-5396-4ec8-8c1e-cc5c8594bd01",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";GamePad",
+                    "action": "PickUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c8d8e769-7463-4574-a9f4-a01495e0d875",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard",
+                    "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b8cd6710-65a6-4c79-9630-0281a1486cea",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";GamePad",
+                    "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f4ef0c57-0d16-497a-8055-26cab726c279",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard",
+                    "action": "RotateObject",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
