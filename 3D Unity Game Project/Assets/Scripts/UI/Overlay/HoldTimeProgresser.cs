@@ -13,7 +13,7 @@ public class HoldTimeProgresser : MonoBehaviour
     public float ResetDelay = 0.3f;
 
     //Input interactions variables
-    private float _holdDuration = 0.4f;
+    private float _holdDuration = 0.2f;
 
 
     //Slider reference
