@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ParticleEffectLibrary : MonoBehaviour
 {
-    [SerializeField] ParticleEffectGroup[] particleEffectGroups;
+    [SerializeField] private ParticleEffectGroup[] particleEffectGroups;
     private Dictionary<string, List<ParticleSystem>> particleDictionary;
     void Start()
     {
@@ -20,8 +20,8 @@ public class ParticleEffectLibrary : MonoBehaviour
 [System.Serializable]
 public struct ParticleEffectGroup
 {
-    string name;
-    List<ParticleSystem> particleSystems;
+    public string name;
+    public List<ParticleSystem> particleSystems;
 }
 
 
