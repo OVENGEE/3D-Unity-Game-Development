@@ -72,7 +72,7 @@ using UnityEngine.InputSystem.Utilities;
 /// }
 /// </code>
 /// </example>
-public partial class @Controls: IInputActionCollection2, IDisposable
+public partial class @Input: IInputActionCollection2, IDisposable
 {
     /// <summary>
     /// Provides access to the underlying asset instance.
@@ -82,7 +82,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     /// <summary>
     /// Constructs a new instance.
     /// </summary>
-    public @Controls()
+    public @Input()
     {
         asset = InputActionAsset.FromJson(@"{
     ""name"": ""Controls"",
@@ -518,9 +518,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_Player_RotateObject = m_Player.FindAction("RotateObject", throwIfNotFound: true);
     }
 
-    ~@Controls()
+    ~@Input()
     {
-        UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, Controls.Player.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, Input.Player.Disable() has not been called.");
     }
 
     /// <summary>
@@ -609,12 +609,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     /// </summary>
     public struct PlayerActions
     {
-        private @Controls m_Wrapper;
+        private @Input m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public PlayerActions(@Controls wrapper) { m_Wrapper = wrapper; }
+        public PlayerActions(@Input wrapper) { m_Wrapper = wrapper; }
         /// <summary>
         /// Provides access to the underlying input action "Player/Movement".
         /// </summary>
