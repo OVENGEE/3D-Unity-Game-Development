@@ -7,7 +7,14 @@ public class SoundEffectLibrary : MonoBehaviour
     private Dictionary<string, List<AudioClip>> soundDictionary;
     void Start()
     {
-        
+        int CubeCounter = 0;
+        var tickets = FindObjectsByType<Ticket>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var _ticket in tickets)
+        {
+            CubeCounter++;
+        }
+
+        Debug.Log("No. of tickets: " + CubeCounter);
     }
 
     // Update is called once per frame
@@ -21,6 +28,6 @@ public class SoundEffectLibrary : MonoBehaviour
 [System.Serializable]
 public struct soundEffectGroups
 {
-    string name;
-    List<AudioClip> audioClips;
+    public string name;
+    public List<AudioClip> audioClips;
 }
