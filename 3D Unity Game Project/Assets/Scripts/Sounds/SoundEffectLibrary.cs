@@ -5,23 +5,31 @@ public class SoundEffectLibrary : MonoBehaviour
 {
     [SerializeField] soundEffectGroups[] soundEffectGroups;
     private Dictionary<string, List<AudioClip>> soundDictionary;
-    void Start()
+    void Awake()
     {
-        int CubeCounter = 0;
-        var tickets = FindObjectsByType<Ticket>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (var _ticket in tickets)
+
+    }
+
+    private void InitializeDictionary()
+    {
+        soundDictionary = new Dictionary<string, List<AudioClip>>();
+        foreach (var soundEffectGroup in soundEffectGroups)
         {
-            CubeCounter++;
+            soundDictionary[soundEffectGroup.name] = soundEffectGroup.audioClips;
         }
-
-        Debug.Log("No. of tickets: " + CubeCounter);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    // public AudioClip GetRandomClip(string name)
+    // {
+    //     if (soundDictionary.ContainsKey(name))
+    //     {
+    //         var audioClips = soundDictionary[name];
+    //         if (audioClips.Count > 0)
+    //         {
+
+    //         }
+    //     }
+    // }
 }
 
 
@@ -31,3 +39,10 @@ public struct soundEffectGroups
     public string name;
     public List<AudioClip> audioClips;
 }
+
+
+//  Code references:
+// 1) Title:Add Sound Effects to Your Game! - Top Down Unity 2D #18
+//    Author:GameCode Library
+//    Date: 19/08/2025
+//    Availiability: https://www.youtube.com/watch?v=AaudFyM3KV0 (wrong link)
