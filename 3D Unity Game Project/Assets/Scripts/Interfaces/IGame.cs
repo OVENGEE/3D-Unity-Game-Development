@@ -6,6 +6,5 @@ public interface IGame
     public string GameName { get; }
     bool isUnlocked { get; }
 
-    public void OnTicketChanged(int availableTickets);
     public bool TryPlay();
 }
