@@ -1,35 +1,33 @@
+using System;
 using UnityEngine;
 
 public class TicketManager : MonoBehaviour
 {
+    
+    public static event Action<int> OnTicketChanged;
+    Action<int> ticketHandler;
     public int AvailableTickets;
-
-
 
     void Awake()
     {
         AvailableTickets=0;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     void OnEnable()
     {
-        Ticket.OnTicketCollect += TicketCollected;
+        ticketHandler = (int x) =>
+        {
+            AvailableTickets++;
+            OnTicketChanged?.Invoke(AvailableTickets);
+            Debug.Log($"{AvailableTickets} tickets collected and available!");
+        };
+        Ticket.OnTicketCollect += ticketHandler;
     }
 
     void OnDisable()
     {
-        Ticket.OnTicketCollect -= TicketCollected;
+        Ticket.OnTicketCollect -= ticketHandler;    
     }
 
-    void TicketCollected(int ticket)
-    {
-        AvailableTickets++;
-        Debug.Log($"{AvailableTickets} tickets collected and available!");
-    }
+
 }
