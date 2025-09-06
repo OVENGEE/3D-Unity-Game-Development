@@ -47,8 +47,9 @@ public class PlayerSprintState : PlayerWalkState
 
         // Only one coroutine
         if (base.player.recharge != null) base.player.StopCoroutine(base.player.recharge);
-        base.player.recharge = base.player.StartCoroutine(StaminaRecover(staminaTimer));
-        
+        base.player.recharge = base.player.StartCoroutine(base.player.StaminaRecover(staminaTimer));
+
+
         //Event unsubscription
         sprintAction.canceled -= OnSprintReleased;
     }
@@ -84,24 +85,11 @@ public class PlayerSprintState : PlayerWalkState
         base.AnimationTriggerEvent();
     }
 
-    public IEnumerator StaminaRecover(float currentStamina)
-    {
-        yield return new WaitForSeconds(1f);
-
-        //Add a proper recovery multipler later
-        staminaTimer = currentStamina;
-        while (staminaTimer < MaxStamina)
-        {
-            staminaTimer += ChargeRate * Time.deltaTime;
-            if (staminaTimer > MaxStamina) staminaTimer = MaxStamina;
-            base.player.StaminaSlider.value = staminaTimer / MaxStamina;
-            yield return null;
-        }
-    }
 
     private void OnSprintReleased(InputAction.CallbackContext context)
     {
         base.playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
+        base.player.canSprint = false;
     }
 
 
