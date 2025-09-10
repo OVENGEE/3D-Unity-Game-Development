@@ -65,6 +65,7 @@ public class PlayerSprintState : PlayerWalkState
         if (staminaTimer <= 0f)
         {
             base.playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
+            base.player.canSprint = false;
             return;
         }
 

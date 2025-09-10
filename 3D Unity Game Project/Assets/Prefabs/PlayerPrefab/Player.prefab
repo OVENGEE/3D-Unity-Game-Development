@@ -503,8 +503,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 5
   canSprint: 1
+  sprintCooldownTimer: 0
+  sprintCooldown: 3
   MaxStamina: 3
-  ChargeRate: 33
+  ChargeRate: 1
   camera: {fileID: 0}
   stateText: {fileID: 0}
   InteractSlider: {fileID: 0}
