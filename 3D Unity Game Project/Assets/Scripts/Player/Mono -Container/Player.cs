@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
+using JetBrains.Annotations;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SearchService;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
@@ -28,14 +30,16 @@ public class Player : MonoBehaviour
     private InputAction throwAction;
     private InputAction pickUpAction;
 
+    private InputAction touchAction;
+
     //Sprint variables
     [Header("Sprint Variables")]
     public bool canSprint = true;
     public float MaxStamina = 4f;
     public float ChargeRate = 33f;
-    public Coroutine recharge;  
+    public Coroutine recharge;
     private float staminaTimer = 0f;
-    
+
 
     //Camera reference
     public Camera camera;
@@ -60,9 +64,8 @@ public class Player : MonoBehaviour
     public GameObject tempGun;
     public ParticleSystem muzzleflash;
 
-
-
-
+    [Header("Interaction Settings")]
+    public float interactRange = 3f;
 
     void Awake()
     {
@@ -85,6 +88,7 @@ public class Player : MonoBehaviour
         inputs.Enable();
         throwAction.performed += OnThrow;
         pickUpAction.performed += OnPickUp;
+        touchAction.performed += OnTouch;
     }
 
     void Update()
@@ -109,6 +113,7 @@ public class Player : MonoBehaviour
         //Unsubscribe the events and disable input
         throwAction.performed -= OnThrow;
         pickUpAction.performed -= OnPickUp;
+        touchAction.performed -= OnTouch;
         inputs.Disable();
     }
 
@@ -159,7 +164,7 @@ public class Player : MonoBehaviour
         tempGun.SetActive(true);
     }
 
-    public IEnumerator StaminaRecover   (float currentStamina)
+    public IEnumerator StaminaRecover(float currentStamina)
     {
         yield return new WaitForSeconds(1f);
 
@@ -189,6 +194,11 @@ public class Player : MonoBehaviour
             {
                 pickUpAction = inputs.Player.PickUp;
             }
+
+            if (touchAction == null)
+            {
+                touchAction = inputs.Player.Touch;
+            }
         }
 
         if (camera == null)
@@ -213,8 +223,29 @@ public class Player : MonoBehaviour
             Debug.Log("the Particle system is not assigned to the player inspector!");
             return;
         }
+
+
     }
 
+    public void OnTouch(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+
+        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
+        if (Physics.Raycast(ray, out RaycastHit hit, interactRange))
+        {
+            //Only allow objects tagged as "swicthable"
+            if (hit.collider.CompareTag("Switchable"))
+            {
+                var switcher = hit.collider.GetComponent<MaterialSwitcher>();
+                if (switcher != null)
+                {
+                    switcher.ToggleMaterial();
+                }
+            }
+        }
+
+    }
 
 
 
