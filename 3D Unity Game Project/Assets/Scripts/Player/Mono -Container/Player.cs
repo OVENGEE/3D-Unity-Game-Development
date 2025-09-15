@@ -31,6 +31,8 @@ public class Player : MonoBehaviour
     //Sprint variables
     [Header("Sprint Variables")]
     public bool canSprint = true;
+    public float sprintCooldownTimer = 0f;
+    public float sprintCooldown = 3f;
     public float MaxStamina = 4f;
     public float ChargeRate = 33f;
     public Coroutine recharge;  
@@ -91,8 +93,7 @@ public class Player : MonoBehaviour
     {
         StateMachine.CurrentPlayerState.FrameUpdate();
 
-
-
+        
         if (heldObject != null)
         {
             heldObject.MoveToHoldPoint(holdPoint.position);
@@ -113,8 +114,6 @@ public class Player : MonoBehaviour
     }
 
 
-
-    //Event Handlers
 
     public void OnPickUp(InputAction.CallbackContext context)
     {
@@ -159,7 +158,13 @@ public class Player : MonoBehaviour
         tempGun.SetActive(true);
     }
 
-    public IEnumerator StaminaRecover   (float currentStamina)
+    public void StartSprintCooldown()
+    {
+        sprintCooldownTimer = sprintCooldown;
+        canSprint = false;
+    }
+
+    public IEnumerator StaminaRecover(float currentStamina)
     {
         yield return new WaitForSeconds(1f);
 
@@ -171,6 +176,8 @@ public class Player : MonoBehaviour
             StaminaSlider.value = staminaTimer / MaxStamina;
             yield return new WaitForSeconds(.1f);
         }
+
+        canSprint = true;
     }
 
     private void NullChecks()
