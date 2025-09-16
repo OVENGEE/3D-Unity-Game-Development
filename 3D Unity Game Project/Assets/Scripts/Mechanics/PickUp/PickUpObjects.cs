@@ -2,9 +2,8 @@ using UnityEngine;
 
 public class PickUpObject : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-
     private Rigidbody rb;
+    internal Vector3 position;
 
     void Awake()
     {
