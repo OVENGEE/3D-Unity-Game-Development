@@ -1,12 +1,9 @@
 using System;
 using System.Collections;
-using System.Drawing;
-using JetBrains.Annotations;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SearchService;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
@@ -31,16 +28,16 @@ public class Player : MonoBehaviour
     private InputAction throwAction;
     private InputAction pickUpAction;
 
-    private InputAction touchAction;
-
     //Sprint variables
     [Header("Sprint Variables")]
     public bool canSprint = true;
+    public float sprintCooldownTimer = 0f;
+    public float sprintCooldown = 3f;
     public float MaxStamina = 4f;
     public float ChargeRate = 33f;
-    public Coroutine recharge;
+    public Coroutine recharge;  
     private float staminaTimer = 0f;
-
+    
 
     //Camera reference
     public Camera camera;
@@ -55,36 +52,17 @@ public class Player : MonoBehaviour
     public float PickUpRange = 3f;
     public Transform holdPoint;
     private PickUpObject heldObject;
-   
 
     [Header("Throwing Settings")]
     public float throwForce = 10;
     public float throwUpwardBoost = 1f;
-
-    [SerializeField]
-    private LineRenderer LineRenderer;
-    private LayerMask CollisionMask;
-
-    [SerializeField]
-    private Transform ReleasePosition;
-
-    [Header("Display Controls")]
-
-    [SerializeField]
-    [Range(10, 100)]
-    private int LinePoints = 25;
-    [SerializeField]
-    [Range(0.01f, 0.25f)]
-    private float TimeBetweenPoints = 0.1f;
-
 
     [Header("Gun Settings")]
 
     public GameObject tempGun;
     public ParticleSystem muzzleflash;
 
-    [Header("Interaction Settings")]
-    public float interactRange = 3f;
+
 
 
 
@@ -109,56 +87,16 @@ public class Player : MonoBehaviour
         inputs.Enable();
         throwAction.performed += OnThrow;
         pickUpAction.performed += OnPickUp;
-        touchAction.performed += OnTouch;
     }
 
     void Update()
     {
         StateMachine.CurrentPlayerState.FrameUpdate();
 
+        
         if (heldObject != null)
         {
             heldObject.MoveToHoldPoint(holdPoint.position);
-
-            // Show and update the throw trajectory with collision detection
-            LineRenderer.enabled = true;
-            LineRenderer.startColor = UnityEngine.Color.white;
-            Vector3 dir = camera.transform.forward;
-            Vector3 impulse = dir * throwForce + Vector3.up * throwUpwardBoost;
-            Vector3 startPosition = ReleasePosition.position;
-            Vector3 previousPoint = startPosition;
-            Vector3 velocity = impulse;
-
-            int points = Mathf.CeilToInt(LinePoints / TimeBetweenPoints) + 1;
-            LineRenderer.positionCount = points;
-
-            for (int i = 0; i < points; i++)
-            {
-                float time = i * TimeBetweenPoints;
-                Vector3 point = startPosition + velocity * time + 0.5f * Physics.gravity * time * time;
-
-                // Raycast from previous point to current point
-                if (i > 0)
-                {
-                    Vector3 segment = point - previousPoint;
-                    if (Physics.Raycast(previousPoint, segment.normalized, out RaycastHit hit, segment.magnitude))
-                    {
-                        LineRenderer.SetPosition(i, hit.point);
-                        // Set remaining points to the collision point
-                        for (int j = i + 1; j < points; j++)
-                            LineRenderer.SetPosition(j, hit.point);
-                        break;
-                    }
-                }
-
-                LineRenderer.SetPosition(i, point);
-                previousPoint = point;
-            }
-        }
-        else
-        {
-            // Hide the trajectory line when not holding an object
-            LineRenderer.enabled = false;
         }
     }
 
@@ -172,13 +110,10 @@ public class Player : MonoBehaviour
         //Unsubscribe the events and disable input
         throwAction.performed -= OnThrow;
         pickUpAction.performed -= OnPickUp;
-        touchAction.performed -= OnTouch;
         inputs.Disable();
     }
 
 
-
-    //Event Handlers
 
     public void OnPickUp(InputAction.CallbackContext context)
     {
@@ -202,7 +137,6 @@ public class Player : MonoBehaviour
             heldObject.Drop();
             heldObject = null;
         }
-
     }
 
     public void OnThrow(InputAction.CallbackContext context)
@@ -215,9 +149,6 @@ public class Player : MonoBehaviour
 
         heldObject.Throw(impulse);
         heldObject = null;
-
-        // Hide the trajectory line immediately after throw
-        LineRenderer.enabled = false;
     }
 
     public void SwitchToShootState()
@@ -225,6 +156,12 @@ public class Player : MonoBehaviour
         InteractSlider.SetActive(false);
         StateMachine.SwitchState(ShootState);
         tempGun.SetActive(true);
+    }
+
+    public void StartSprintCooldown()
+    {
+        sprintCooldownTimer = sprintCooldown;
+        canSprint = false;
     }
 
     public IEnumerator StaminaRecover(float currentStamina)
@@ -239,6 +176,8 @@ public class Player : MonoBehaviour
             StaminaSlider.value = staminaTimer / MaxStamina;
             yield return new WaitForSeconds(.1f);
         }
+
+        canSprint = true;
     }
 
     private void NullChecks()
@@ -256,11 +195,6 @@ public class Player : MonoBehaviour
             if (pickUpAction == null)
             {
                 pickUpAction = inputs.Player.PickUp;
-            }
-
-            if (touchAction == null)
-            {
-                touchAction = inputs.Player.Touch;
             }
         }
 
@@ -286,29 +220,8 @@ public class Player : MonoBehaviour
             Debug.Log("the Particle system is not assigned to the player inspector!");
             return;
         }
-
-
     }
 
-    public void OnTouch(InputAction.CallbackContext context)
-    {
-        if (!context.performed) return;
-
-        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit, interactRange))
-        {
-            //Only allow objects tagged as "swicthable"
-            if (hit.collider.CompareTag("Switchable"))
-            {
-                var switcher = hit.collider.GetComponent<MaterialSwitcher>();
-                if (switcher != null)
-                {
-                    switcher.ToggleMaterial();
-                }
-            }
-        }
-
-    }
 
 
 

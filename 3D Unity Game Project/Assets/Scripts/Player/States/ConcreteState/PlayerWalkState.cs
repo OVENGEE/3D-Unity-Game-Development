@@ -1,4 +1,4 @@
-using System;
+ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -131,7 +131,10 @@ public class PlayerWalkState : PlayerState
 
     private void OnSprint(InputAction.CallbackContext context)
     {
-        playerStateMachine.SwitchState(new PlayerSprintState(player, playerStateMachine));
+        if (base.player.canSprint)
+        {
+            playerStateMachine.SwitchState(new PlayerSprintState(player, playerStateMachine));
+        }
     }
 
     private void OnJump(InputAction.CallbackContext context)

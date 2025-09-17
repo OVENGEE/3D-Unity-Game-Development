@@ -1,18 +1,32 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
 
 public class Target : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    //Deactivate after delay
+    [SerializeField] private float timeoutDelay = 1f;
+
+    private IObjectPool<Target> objectPool;
+    public IObjectPool<Target> ObjectPool { set => objectPool = value; }
+
+
+    public void PlayAfterShotRoutine()
     {
-        
+        StartCoroutine(AfterShotRoutine());
     }
 
-    // Update is called once per frame
-    void Update()
+    public IEnumerator AfterShotRoutine()
     {
-        
+        // Target disappears
+        this.GetComponent<Collider>().enabled = false;
+        this.GetComponent<Renderer>().enabled = false;
+
+        yield return new WaitForSecondsRealtime(timeoutDelay);
+
+        // Target reappears
+        this.GetComponent<Collider>().enabled = true;
+        this.GetComponent<Renderer>().enabled = true;
     }
 }
 

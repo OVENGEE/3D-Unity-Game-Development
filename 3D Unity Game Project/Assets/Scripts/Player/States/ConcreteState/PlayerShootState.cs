@@ -68,36 +68,36 @@
             base.AnimationTriggerEvent();
         }
 
-        void OnshootFunction(InputAction.CallbackContext context)
+    void OnshootFunction(InputAction.CallbackContext context)
+    {
+        RaycastHit hit;
+        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
+
+        //Play animation and    particle effect
+        base.player.muzzleflash.Play();
+
+        if (Physics.Raycast(ray, out hit, range))
         {
-            RaycastHit hit;
-            Ray ray = new Ray(camera.transform.position, camera.transform.forward);
 
-            //Play animation and    particle effect
-            base.player.muzzleflash.Play();
-
-            if (Physics.Raycast(ray, out hit, range))
+            if (hit.collider.TryGetComponent<Target>(out Target target))
             {
-
-                GameObject target = hit.collider.gameObject;
-                if (target.tag == "Target")
-                {
-                    Debug.Log($"{hit.collider.name} has been hit!");
-                    GameObject.Destroy(target);
-                }
-
+                Debug.Log($"{hit.collider.name} has been hit!");
+                target.PlayAfterShotRoutine();
             }
+
+
 
             firetimer = 0.1f;
         }
+    }
 
 
-        private void OnExitShootState(InputAction.CallbackContext context)
-        {
-            //Switch to the walking state!
-            base.player.tempGun.SetActive(false);
-            playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
-        }
+    private void OnExitShootState(InputAction.CallbackContext context)
+    {
+        //Switch to the walking state!
+        base.player.tempGun.SetActive(false);
+        playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
+    }
 
     }
 
