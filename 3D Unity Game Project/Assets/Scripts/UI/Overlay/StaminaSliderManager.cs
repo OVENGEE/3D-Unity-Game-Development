@@ -24,4 +24,9 @@ public class StaminaSliderManager : MonoBehaviour
     {
         slider.value = value;
     }
+
+    void SliderDissapear()
+    {
+        
+    }
 }

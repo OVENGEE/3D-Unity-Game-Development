@@ -34,7 +34,6 @@ public class QuitApplication : MonoBehaviour
     {
         inputActions.UI.Enable();
         quitAction.performed += OnQuitTrigger;
-        Debug.Log("Escape button pressed!");
     }
 
     void OnDisable()
