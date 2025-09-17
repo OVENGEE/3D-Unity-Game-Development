@@ -8,7 +8,6 @@ public class TargetManager : MonoBehaviour
     [SerializeField] Target targetPrefab;
     // [SerializeField] Target target;
 
-    // I might need to the target script instead of the gameobject itself... because all targets will have the target scripts.
 
 
     // throw an exception if we try to return an existing item, already in the pool

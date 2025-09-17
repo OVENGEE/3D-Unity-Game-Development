@@ -185,7 +185,6 @@ public class Player : MonoBehaviour
         if (inputs == null)
         {
             inputs = new CustomInputSystem();
-            Debug.Log("Custom input new instance made!");
 
             if (throwAction == null)
             {
@@ -221,8 +220,6 @@ public class Player : MonoBehaviour
             return;
         }
     }
-
-
 
 
 
