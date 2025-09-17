@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,7 +9,7 @@ public class PlayerSprintState : PlayerWalkState
     InputAction sprintAction;
 
     //Sprint variables
-    float staminaTimer, MaxStamina,ChargeRate;
+    float staminaTimer, MaxStamina,ChargeRate, staminaVal;
 
     //FOV variables
     float sprintFOV = 90f;
@@ -59,7 +60,8 @@ public class PlayerSprintState : PlayerWalkState
         base.FrameUpdate();
 
         staminaTimer -= Time.deltaTime;
-        base.player.StaminaSlider.value = staminaTimer / MaxStamina;
+        staminaVal = staminaTimer / MaxStamina;
+        base.player.UpdateStaminaSlider(staminaVal);
         
         //if Sprint button released or duration exceeded, exit sprint 
         if (staminaTimer <= 0f)

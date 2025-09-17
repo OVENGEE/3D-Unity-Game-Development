@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
     [Header("UI references")]
     public TextMeshProUGUI stateText;
     public GameObject InteractSlider;
-    public Slider StaminaSlider;
+    //public Slider StaminaSlider;
 
     [Header("PickUp Settings")]
     public float PickUpRange = 3f;
@@ -167,17 +167,25 @@ public class Player : MonoBehaviour
     public IEnumerator StaminaRecover(float currentStamina)
     {
         yield return new WaitForSeconds(1f);
-
+        float staminaValue;
         staminaTimer = currentStamina;
         while (staminaTimer < MaxStamina)
         {
             staminaTimer += ChargeRate / 10f;
             if (staminaTimer > MaxStamina) staminaTimer = MaxStamina;
-            StaminaSlider.value = staminaTimer / MaxStamina;
+            staminaValue = staminaTimer / MaxStamina;
+            UpdateStaminaSlider(staminaValue);
             yield return new WaitForSeconds(.1f);
         }
 
         canSprint = true;
+    }
+
+    public static event Action<float> OnSliderChange;
+
+    public void UpdateStaminaSlider(float value)
+    {
+        OnSliderChange?.Invoke(value);
     }
 
     private void NullChecks()
@@ -202,9 +210,9 @@ public class Player : MonoBehaviour
             camera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
         }
 
-        if (InteractSlider == null || StaminaSlider == null)
+        if (InteractSlider == null)
         {
-            Debug.Log("the sliders is not assigned to the Player inspector!");
+            Debug.Log("the slider is not assigned to the Player inspector!");
             return;
         }
 

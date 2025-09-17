@@ -33,7 +33,7 @@ public class PlayerWalkState : PlayerState
     {
         base.EnterState();
         controller = base.player.GetComponent<CharacterController>();
-        slider = base.player.StaminaSlider;
+        //slider = base.player.StaminaSlider;
         NullChecks();
         base.player.stateText.text = "Walk";
 
