@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8275701388513770183}
   - component: {fileID: 719778286371258048}
   m_Layer: 7
-  m_Name: InteractObject
+  m_Name: InteractionBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
