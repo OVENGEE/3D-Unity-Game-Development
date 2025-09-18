@@ -21,6 +21,7 @@ public class StaminaSliderManager : MonoBehaviour
     void Awake()
     {
         slider = GetComponent<Slider>();
+        ToggleVisibility(false);
     }
 
     void OnEnable()
