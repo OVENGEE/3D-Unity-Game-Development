@@ -4,6 +4,19 @@ using UnityEngine.UI;
 public class StaminaSliderManager : MonoBehaviour
 {
     private Slider slider;
+    private bool sliderVisible = true;
+    public bool SliderVisible
+    {
+        get => sliderVisible;
+        set
+        {
+            if (sliderVisible != value)
+            {
+                sliderVisible = value;
+                Debug.Log($"{sliderVisible} has changed to {value}");
+            }
+        }
+    }
 
     void Awake()
     {
@@ -23,10 +36,17 @@ public class StaminaSliderManager : MonoBehaviour
     void SliderValueChange(float value)
     {
         slider.value = value;
+        SliderVisible = !Mathf.Approximately(slider.value, 1f);
+        ToggleVisibility(sliderVisible);
+        
     }
 
-    void SliderDissapear()
+    void ToggleVisibility(bool state)
     {
-        
+        Image[] images = GetComponentsInChildren<Image>();
+        foreach (var image in images)
+        {
+            image.enabled = state;
+        }
     }
 }
