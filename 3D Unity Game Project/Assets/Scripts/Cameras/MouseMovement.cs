@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using UnityEngine.iOS;
 
 public class MouseMovement : MonoBehaviour
 {
@@ -60,6 +61,8 @@ public class MouseMovement : MonoBehaviour
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
+
+
 
 
         //Mouse input directions
