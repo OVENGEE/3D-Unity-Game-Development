@@ -4,7 +4,7 @@ public class DuckGame : MonoBehaviour, IGame
 {
     [Header("Game data")]
     [SerializeField] BaseGame gameinfo;
-           
+
 
     public int RequiredTickets { get; set; }
     public string GameName { get; set; }
@@ -21,6 +21,15 @@ public class DuckGame : MonoBehaviour, IGame
         InitializeGame(gameinfo);
     }
 
+    void OnEnable()
+    {
+    }
+
+    void OnDisable()
+    {
+
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -33,11 +42,17 @@ public class DuckGame : MonoBehaviour, IGame
         GameName = game.GameName;
         isUnlocked = false;
     }
-    
+
 
     public bool TryPlay()
     {
-
+        //if game is able to be played and player tries to play game.
+        if (isUnlocked) TicketManager.AvailableTickets = -RequiredTickets;
         return isUnlocked;
+    }
+
+    public void DetermineGameAvailability(int ticket)
+    {
+        isUnlocked = ticket >= RequiredTickets;
     }
 }

@@ -7,7 +7,7 @@ public class TicketManager : MonoBehaviour
 
     public static event Action<int> OnTicketChanged;
     Action<int> ticketHandler;
-    public int AvailableTickets;
+    public static int AvailableTickets;
     List<IGame> gamesList = new List<IGame>();
 
 
@@ -36,14 +36,16 @@ public class TicketManager : MonoBehaviour
 
     void SearchGames()
     {
+        //Searches for all Gameobjects with a Monobehaviour script
         var objs = GameObject.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var obj in objs)
         {
+            //Searchs for which object is implements the interface IGame
             if (obj is IGame)
             {
                 IGame game = (IGame)obj;
                 gamesList.Add(game);
-                
+
             }
         }
     }
@@ -57,8 +59,6 @@ public class TicketManager : MonoBehaviour
 
         Debug.Log($"Number of miniGames is:{gamesList.Count}");
     }
-
-
 }
 
 //Code references:

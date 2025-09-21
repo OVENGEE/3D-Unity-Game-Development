@@ -8,4 +8,5 @@ public interface IGame
 
     public bool TryPlay();
     public void InitializeGame(BaseGame game);
+    public void DetermineGameAvailability(int ticket);
 }
