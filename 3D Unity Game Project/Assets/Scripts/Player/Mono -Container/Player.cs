@@ -116,7 +116,7 @@ public class Player : MonoBehaviour
 
             // Show and update the throw trajectory with collision detection
             LineRenderer.enabled = true;
-            LineRenderer.startColor = UnityEngine.Color.white;
+            LineRenderer.startColor = Color.white;
             Vector3 dir = camera.transform.forward;
             Vector3 impulse = dir * throwForce + Vector3.up * throwUpwardBoost;
             Vector3 startPosition = ReleasePosition.position;

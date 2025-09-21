@@ -2,9 +2,10 @@ using UnityEngine;
 
 public interface IGame
 {
-    public int RequiredTickets { get; }
-    public string GameName { get; }
-    bool isUnlocked { get; }
+    public int RequiredTickets { get; set; }
+    public string GameName { get; set; }
+    bool isUnlocked { get; set; }
 
     public bool TryPlay();
+    public void InitializeGame(BaseGame game);
 }
