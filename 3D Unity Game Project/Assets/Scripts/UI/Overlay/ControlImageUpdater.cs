@@ -4,6 +4,7 @@ using UnityEngine;
 public class ControlImageUpdater : MonoBehaviour
 {
     private Image img;
+    private Sprite currentSprite;
     private Color imgcolor;
     void Awake()
     {
@@ -14,8 +15,28 @@ public class ControlImageUpdater : MonoBehaviour
     }
 
 
-    void Update()
+    void DisplaySprite(Sprite sprite)
     {
-        
+        if (sprite == null || sprite == currentSprite)
+        {
+            imgcolor.a = 0f;
+            img.color = imgcolor;
+            return;
+        }
+
+        imgcolor.a = 1f;
+        img.color = imgcolor;
+        img.sprite = sprite;
+        currentSprite = sprite;
+    }
+
+    void OnEnable()
+    {
+        ControlsGuide.OnControlImageChange += DisplaySprite;
+    }
+
+    void OnDisable()
+    {
+        ControlsGuide.OnControlImageChange -= DisplaySprite;
     }
 }
