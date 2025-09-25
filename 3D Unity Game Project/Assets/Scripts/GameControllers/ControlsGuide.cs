@@ -36,10 +36,10 @@ public class ControlsGuide : MonoBehaviour
             switch (hit.collider.gameObject.layer)
             {
                 case 7:
-
+                    OnControlImageChange?.Invoke(GetControlSprite(""));
                     break;
                 case 9:
-
+                    OnControlImageChange?.Invoke(GetControlSprite(""));
                     break;
             }
         }

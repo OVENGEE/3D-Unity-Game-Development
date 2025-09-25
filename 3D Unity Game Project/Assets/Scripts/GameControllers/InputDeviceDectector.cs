@@ -1,13 +1,14 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.iOS;
 
 public class InputDeviceDectector : MonoBehaviour
 {
     private InputAction input;
     public DeviceType currentDevice;
-    public static event Func<DeviceType,DeviceType> OnDeviceChange;
 
+    public static Func<DeviceType, DeviceType> OnDeviceChange;
     void Awake()
     {
         input = new InputAction(binding: "/*/<button>");
@@ -28,8 +29,8 @@ public class InputDeviceDectector : MonoBehaviour
     void OnInputPressed(InputAction.CallbackContext context)
     {
         InputDevice inputDevice = context.control.device;
-        string deviceName = inputDevice.displayName.ToLower();
         currentDevice = DeviceType.Keyboard;
+        string deviceName = inputDevice.displayName.ToLower();
 
         if (inputDevice is Gamepad)
         {
@@ -43,15 +44,16 @@ public class InputDeviceDectector : MonoBehaviour
             }
 
         }
-
     }
-    
-
 
     public enum DeviceType
     {
         Keyboard,
-        Xbox,
+        Xbox, 
         PlayStation,
     };
+
 }
+
+
+
