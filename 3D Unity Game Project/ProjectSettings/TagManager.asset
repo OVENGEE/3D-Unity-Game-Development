@@ -8,7 +8,6 @@ TagManager:
   - canPickUp
   - Gun
   - Target
-  - PickUp
   - Quit
   layers:
   - Default
@@ -20,7 +19,7 @@ TagManager:
   - holdLayer
   - Interactable
   - UnAvailableGame
-  - 
+  - Controls
   - 
   - 
   - 
