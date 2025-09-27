@@ -16,11 +16,23 @@ public class WeatherController : MonoBehaviour
     [SerializeField] Gradient moonColor;
 
 
+
+    MiniGameManager gameManager;
     void Awake()
     {
         celestialLight = GetComponentInChildren<Light>();
+        gameManager = FindAnyObjectByType<MiniGameManager>(FindObjectsInactive.Include);
     }
 
+    void OnEnable()
+    {
+
+    }
+
+    void OnDisable()
+    {
+        
+    }
 
 }
 

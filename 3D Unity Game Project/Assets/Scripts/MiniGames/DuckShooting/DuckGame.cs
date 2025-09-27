@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
 
-public class DuckGame : MonoBehaviour, IGame
+public class DuckGame : MonoBehaviour, IGame,IGameCompleted
 {
     [Header("Game data")]
     [SerializeField] BaseGame gameinfo;
@@ -12,6 +13,8 @@ public class DuckGame : MonoBehaviour, IGame
 
 
     Interaction interaction;
+
+    public event Action OnGameCompleted;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
