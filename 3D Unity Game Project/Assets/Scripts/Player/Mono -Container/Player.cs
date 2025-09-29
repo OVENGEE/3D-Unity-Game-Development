@@ -37,6 +37,8 @@ public class Player : MonoBehaviour
     public float ChargeRate = 33f;
     public Coroutine recharge;  
     private float staminaTimer = 0f;
+
+    public ParticleSystem sprintEffect;
     
 
     //Camera reference
@@ -280,7 +282,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if (muzzleflash == null)
+        if (muzzleflash == null || sprintEffect == null)
         {
             Debug.Log("the Particle system is not assigned to the player inspector!");
             return;

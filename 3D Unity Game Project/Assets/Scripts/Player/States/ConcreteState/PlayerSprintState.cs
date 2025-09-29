@@ -2,6 +2,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 
 public class PlayerSprintState : PlayerWalkState
 {
@@ -9,10 +10,15 @@ public class PlayerSprintState : PlayerWalkState
     InputAction sprintAction;
 
     //Sprint variables
-    float staminaTimer, MaxStamina,ChargeRate, staminaVal;
+    float staminaTimer, MaxStamina, ChargeRate, staminaVal;
 
     //FOV variables
     float sprintFOV = 90f;
+
+
+    //Events 
+    public static event Action OnSprintEffectStarted;
+    public static event Action OnSprintEffectEnded;
 
     public PlayerSprintState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
@@ -34,6 +40,9 @@ public class PlayerSprintState : PlayerWalkState
             sprintAction = base.player.inputs.Player.Sprint;
         }
 
+        //Invoke SprintEffectStart Event
+        OnSprintEffectStarted?.Invoke();
+
         //Event subscription
         sprintAction.canceled += OnSprintReleased;
     }
@@ -44,7 +53,6 @@ public class PlayerSprintState : PlayerWalkState
 
         base.FOVTransition(60f);
         base.controller.Move(Vector3.zero);
-        Debug.Log("Left Sprint State!");
 
         // Only one coroutine
         if (base.player.recharge != null) base.player.StopCoroutine(base.player.recharge);
@@ -62,12 +70,11 @@ public class PlayerSprintState : PlayerWalkState
         staminaTimer -= Time.deltaTime;
         staminaVal = staminaTimer / MaxStamina;
         base.player.UpdateStaminaSlider(staminaVal);
-        
+
         //if Sprint button released or duration exceeded, exit sprint 
         if (staminaTimer <= 0f)
         {
-            base.playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
-            base.player.canSprint = false;
+            SprintEnded();
             return;
         }
 
@@ -91,10 +98,14 @@ public class PlayerSprintState : PlayerWalkState
 
     private void OnSprintReleased(InputAction.CallbackContext context)
     {
-        base.playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
-        base.player.canSprint = false;
+        SprintEnded();
     }
 
+    private void SprintEnded()
+    {
+        base.playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
+        OnSprintEffectEnded?.Invoke();
+    }
 
 }
 // Code references:
