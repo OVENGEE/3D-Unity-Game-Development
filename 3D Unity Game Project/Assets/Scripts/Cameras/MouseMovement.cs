@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
-using UnityEngine.iOS;
 
 public class MouseMovement : MonoBehaviour
 {
