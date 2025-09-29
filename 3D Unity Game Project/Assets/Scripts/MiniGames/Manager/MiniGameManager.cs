@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System;
 public class MiniGameManager : MonoBehaviour
 {
     public event Action onAnyGameCompleted;
