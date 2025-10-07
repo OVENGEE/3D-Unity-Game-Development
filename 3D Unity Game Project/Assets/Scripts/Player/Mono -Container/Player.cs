@@ -14,7 +14,16 @@ public class Player : MonoBehaviour
     public float MoveSpeed = 5f;
 
 
-    //State instances 
+    //State Information
+    [Header("State Data")]
+    [SerializeField] public PlayerState playerState;
+    public enum PlayerState
+    {
+        Walk,
+        Crouch,
+        Shoot,
+        Sprint
+    } 
 
     public PlayerStateMachine StateMachine { get; set; }
     public PlayerWalkState WalkState { get; set; }
@@ -22,6 +31,9 @@ public class Player : MonoBehaviour
 
     public PlayerShootState ShootState { get; set; }
     public PlayerSprintState SprintState { get; set; }
+
+    //State event
+    public static event Action<PlayerState> OnPlayerStateChange;
 
     //Input 
     public CustomInputSystem inputs;
@@ -246,6 +258,11 @@ public class Player : MonoBehaviour
     public void UpdateStaminaSlider(float value)
     {
         OnSliderChange?.Invoke(value);
+    }
+
+    public void UpdateState(PlayerState state)
+    {
+        OnPlayerStateChange?.Invoke(state);
     }
 
     private void NullChecks()

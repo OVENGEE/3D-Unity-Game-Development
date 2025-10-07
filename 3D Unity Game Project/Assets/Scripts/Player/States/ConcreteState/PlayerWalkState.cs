@@ -33,9 +33,11 @@ public class PlayerWalkState : PlayerState
     {
         base.EnterState();
         controller = base.player.GetComponent<CharacterController>();
-        //slider = base.player.StaminaSlider;
+        Player.PlayerState currentState = base.player.playerState;
+        currentState = Player.PlayerState.Walk;
+        base.player.UpdateState(currentState);
         NullChecks();
-        base.player.stateText.text = "Walk";
+
 
         //Event Subscriptions
         crouchAction.performed += OnCrouch;

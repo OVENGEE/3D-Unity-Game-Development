@@ -27,7 +27,10 @@ public class PlayerSprintState : PlayerWalkState
     public override void EnterState()
     {
         base.EnterState();
-        base.player.stateText.text = "Sprint";
+        Player.PlayerState currentState = base.player.playerState;
+        currentState = Player.PlayerState.Sprint;
+        base.player.UpdateState(currentState);
+
 
         //Assigning from monobehaviour class
         MaxStamina = base.player.MaxStamina;

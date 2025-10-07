@@ -25,7 +25,10 @@
             base.EnterState();
             range = 20f;
             camera = base.player.camera;
-            base.player.stateText.text = "Shoot!";
+
+            Player.PlayerState currentState = base.player.playerState;
+            currentState = Player.PlayerState.Shoot;
+            base.player.UpdateState(currentState);
 
             if (shootAction == null)
             {

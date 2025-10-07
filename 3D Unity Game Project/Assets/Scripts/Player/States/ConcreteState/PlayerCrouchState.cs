@@ -25,7 +25,9 @@ public class PlayerCrouchState : PlayerWalkState
     public override void EnterState()
     {
         base.EnterState();
-        base.player.stateText.text = "Crouch";
+        Player.PlayerState currentState = base.player.playerState;
+        currentState = Player.PlayerState.Crouch;
+        base.player.UpdateState(currentState);
 
         base.FOVTransition(crouchFOV); //change to crouch FOV
         if (crouch == null)

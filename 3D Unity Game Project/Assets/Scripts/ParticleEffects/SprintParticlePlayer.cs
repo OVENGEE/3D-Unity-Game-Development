@@ -25,13 +25,11 @@ public class SprintParticlePlayer : MonoBehaviour
     void PlayEffect()
     {
         particle.Play();
-        Debug.Log("SprintEffect ON");
     }
 
 
     void StopEffect()
     {
         particle.Stop();
-        Debug.Log("SprintEffect OFF");
     }
 }
