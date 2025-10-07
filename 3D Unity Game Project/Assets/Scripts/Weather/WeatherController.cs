@@ -2,26 +2,20 @@ using UnityEngine;
 
 public class WeatherController : MonoBehaviour
 {
-    [Header("Time Settings")]
-    [Range(0, 24)][SerializeField] float TimeofDay = 6f;
-
-
-    [Header("Sun Settings")]
-    [SerializeField] Gradient sunColor;
-    [SerializeField] AnimationCurve sunTemperature;
-    [SerializeField] AnimationCurve sunIntensity;
-    private Light celestialLight;
-
-    [Header("Moon Settings")]
-    [SerializeField] Gradient moonColor;
-
-
-
+    
+    Light celestialLight;
     MiniGameManager gameManager;
     void Awake()
     {
         celestialLight = GetComponentInChildren<Light>();
         gameManager = FindAnyObjectByType<MiniGameManager>(FindObjectsInactive.Include);
+    }
+    enum SunPhase
+    {
+        SunRise,
+        Noon,
+        Evening,
+        Night
     }
 
     void OnEnable()
