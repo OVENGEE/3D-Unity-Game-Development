@@ -12,11 +12,13 @@ public class WeatherController : MonoBehaviour
     }
     enum SunPhase
     {
-        SunRise,
-        Noon,
-        Evening,
-        Night
+        SunRise = 45,
+        Noon = 90,
+        Evening = 300,
+        Night 
     }
+
+
 
     void OnEnable()
     {
