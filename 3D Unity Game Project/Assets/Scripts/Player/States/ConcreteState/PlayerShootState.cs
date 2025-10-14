@@ -3,7 +3,7 @@
     using UnityEngine;
     using UnityEngine.InputSystem;
 
-    public class PlayerShootState : PlayerWalkState
+    public class PlayerShootState : PlayerWalkState,ITriggerHandler
     {
         //Shoot references
         private float firetimer;
@@ -50,7 +50,6 @@
 
             //Event unSubscriptions
             shootAction.performed -= OnshootFunction;
-            OnExitShootState();
         }
 
         public override void PhysicsUpdate()
@@ -74,7 +73,7 @@
         RaycastHit hit;
         Ray ray = new Ray(camera.transform.position, camera.transform.forward);
 
-        //Play animation and    particle effect
+        //Play animation and particle effect
         base.player.muzzleflash.Play();
 
         if (Physics.Raycast(ray, out hit, range))
@@ -99,10 +98,15 @@
         base.player.tempGun.SetActive(false);
         playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
     }
-
-
-
+    public void OnTriggerExit(Collider other)
+    {
+        //The invisibleBoundary is layerIndex 10
+        if (other.gameObject.layer == 10)
+        {
+            OnExitShootState();
+        }
     }
+}
 
 //Code references:
 // 1)Title: Unity - Shooting in Unity | Raycasting - (10 Minute tutorial - 2022 UPDATED)

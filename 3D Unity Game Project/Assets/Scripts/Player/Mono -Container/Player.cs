@@ -265,6 +265,11 @@ public class Player : MonoBehaviour
         OnPlayerStateChange?.Invoke(state);
     }
 
+    void OnTriggerExit(Collider other)
+    {
+        (StateMachine.CurrentPlayerState as ITriggerHandler)?.OnTriggerExit(other);
+    }
+    
     private void NullChecks()
     {
         if (inputs == null)

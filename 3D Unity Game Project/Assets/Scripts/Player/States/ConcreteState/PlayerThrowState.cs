@@ -3,7 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerThrowState : PlayerWalkState
+public class PlayerThrowState : PlayerWalkState,ITriggerHandler
 {
     //Input Action Declaration
     InputAction aimAction;
@@ -45,6 +45,15 @@ public class PlayerThrowState : PlayerWalkState
         base.ExitState();
     }
 
+    public void OnTriggerExit(Collider other)
+    {
+        //The invisibleBoundary is layerIndex 10
+        if (other.gameObject.layer == 10)
+        {
+            ExitState();
+        }
+    }
+
     private void InputActionAssignment()
     {
         //Assigning all Input actions of the state
@@ -58,6 +67,7 @@ public class PlayerThrowState : PlayerWalkState
             throwAction = base.player.inputs.Player.Throw;
         }
     }
+
 
 
     // PickUpObject Logic:
