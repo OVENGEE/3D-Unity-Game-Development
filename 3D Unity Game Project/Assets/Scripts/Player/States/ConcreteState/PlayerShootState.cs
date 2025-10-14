@@ -3,7 +3,7 @@
     using UnityEngine;
     using UnityEngine.InputSystem;
 
-    public class PlayerShootState : PlayerState
+    public class PlayerShootState : PlayerWalkState
     {
         //Shoot references
         private float firetimer;
@@ -42,17 +42,15 @@
 
             //Event Subscriptions
             shootAction.performed += OnshootFunction;
-            moveAction.performed += OnExitShootState;
         }
 
         public override void ExitState()
         {
             base.ExitState();
 
-
             //Event unSubscriptions
             shootAction.performed -= OnshootFunction;
-            moveAction.performed -= OnExitShootState;
+            OnExitShootState();
         }
 
         public override void PhysicsUpdate()
@@ -95,12 +93,14 @@
     }
 
 
-    private void OnExitShootState(InputAction.CallbackContext context)
+    private void OnExitShootState()
     {
         //Switch to the walking state!
         base.player.tempGun.SetActive(false);
         playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
     }
+
+
 
     }
 

@@ -22,7 +22,8 @@ public class Player : MonoBehaviour
         Walk,
         Crouch,
         Shoot,
-        Sprint
+        Sprint,
+        Throw
     } 
 
     public PlayerStateMachine StateMachine { get; set; }
@@ -60,7 +61,6 @@ public class Player : MonoBehaviour
     [Header("UI references")]
     public TextMeshProUGUI stateText;
     public GameObject InteractSlider;
-    //public Slider StaminaSlider;
 
     [Header("PickUp Settings")]
     public float PickUpRange = 3f;
@@ -71,12 +71,12 @@ public class Player : MonoBehaviour
     public float throwForce = 10;
     public float throwUpwardBoost = 1f;
 
-     [SerializeField]
-    private LineRenderer LineRenderer;
+    [SerializeField]
+    public LineRenderer LineRenderer;
     private LayerMask CollisionMask;
 
     [SerializeField]
-    private Transform ReleasePosition;
+    public Transform ReleasePosition;
 
     [Header("Display Controls")]
 
