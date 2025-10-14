@@ -14,7 +14,7 @@
 
         //Input actions
         InputAction shootAction;
-        InputAction moveAction;
+        InputAction sprintAction;
 
         public PlayerShootState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
         {
@@ -35,13 +35,14 @@
                 shootAction = base.player.inputs.Player.Shoot;
             }
 
-            if (moveAction == null)
+            if (sprintAction == null)
             {
-                moveAction = base.player.inputs.Player.Move;
+                sprintAction = base.player.inputs.Player.Sprint;
             }
 
             //Event Subscriptions
             shootAction.performed += OnshootFunction;
+            sprintAction.performed += OnSprintActivated;
         }
 
         public override void ExitState()
@@ -50,6 +51,7 @@
 
             //Event unSubscriptions
             shootAction.performed -= OnshootFunction;
+            sprintAction.performed -= OnSprintActivated;
         }
 
         public override void PhysicsUpdate()
@@ -105,6 +107,13 @@
         {
             OnExitShootState();
         }
+    }
+
+    void OnSprintActivated(InputAction.CallbackContext context)
+    {
+        //Switch to the sprint state!
+        base.player.tempGun.SetActive(false);
+        playerStateMachine.SwitchState(new PlayerSprintState(player, playerStateMachine));
     }
 }
 
