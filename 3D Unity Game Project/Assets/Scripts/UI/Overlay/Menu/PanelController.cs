@@ -52,7 +52,6 @@ public class PanelController : MonoBehaviour
     {
         if (!context.performed) return;
         string uiInputCall = context.action.name;
-        Debug.Log($"{uiInputCall} action has occured");
 
         foreach(panelLibrary panel in panelLibraries)
         {
@@ -60,8 +59,6 @@ public class PanelController : MonoBehaviour
             if (currentPanelName == uiInputCall)
             {
                 panel.panelObject?.SetActive(true);
-                Debug.Log($"{currentPanelName} is being activated");
-                Debug.Log($"{panel.panelObject.name} => panel object has been activated!");
             }
             else
             {

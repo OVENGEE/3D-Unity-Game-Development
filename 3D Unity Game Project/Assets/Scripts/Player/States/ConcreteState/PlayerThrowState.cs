@@ -50,7 +50,7 @@ public class PlayerThrowState : PlayerWalkState,ITriggerHandler
         //The invisibleBoundary is layerIndex 10
         if (other.gameObject.layer == 10)
         {
-            ExitState();
+            
         }
     }
 
@@ -59,12 +59,12 @@ public class PlayerThrowState : PlayerWalkState,ITriggerHandler
         //Assigning all Input actions of the state
         if (pickUpAction == null)
         {
-            pickUpAction = base.player.inputs.Player.PickUp;
+            pickUpAction = base.player.inputs?.Player.PickUp;
         }
 
         if (throwAction == null)
         {
-            throwAction = base.player.inputs.Player.Throw;
+            throwAction = base.player.inputs?.Player.Throw;
         }
     }
 
