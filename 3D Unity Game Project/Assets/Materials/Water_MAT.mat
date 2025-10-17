@@ -55,7 +55,7 @@ Material:
     - _QueueOffset: 0
     - _Specular_Density: 9
     - _Specular_Thickness: 2.61
-    - _Specular_speed: 0.93
+    - _Specular_speed: 1.1
     - _Water_Depth: 1.5
     - _Wave_Amplitude: 1
     - _Wave_Frequency: 1
