@@ -11,6 +11,10 @@ public class PanelController : MonoBehaviour
     InputAction Quit;
     InputAction Menu;
 
+
+    //Panel variables
+    int panelIndex;
+
     private void Awake()
     {
         if (inputs == null)
@@ -54,10 +58,11 @@ public class PanelController : MonoBehaviour
     {
         if (!context.performed) return;
         string uiInputCall = context.action.name;
+        panelIndex = 0;
 
         foreach (panelLibrary panel in panelLibraries)
         {
-            
+
             string currentPanelName = panel.panelName.ToString();
             if (currentPanelName == uiInputCall)
             {
@@ -69,21 +74,34 @@ public class PanelController : MonoBehaviour
             else
             {
                 panel.panelObject?.SetActive(false);
-            }
 
+            }
+        }
+        
+        //Update visibility state
+        for(panelIndex =0; panelIndex < panelLibraries.Length; panelIndex++)
+        {
+            panelLibraries[panelIndex].visibilityState = panelLibraries[panelIndex].panelObject.activeSelf;
+            panelIndex++;
         }
     }
 
     private void ResetToHUDPanel(bool state)
     {
         if (state) return;
-
-        foreach(var panel in panelLibraries)
+        panelIndex = 0;
+        foreach (var panel in panelLibraries)
         {
             if (panel.panelName == PanelType.Tutorial || panel.panelName == PanelType.PlayerHUD)
             {
                 panel.panelObject.SetActive(true);
             }
+        }
+        
+        //Update visibility state
+        for(panelIndex =0; panelIndex < panelLibraries.Length; panelIndex++)
+        {
+            panelLibraries[panelIndex].visibilityState = panelLibraries[panelIndex].panelObject.activeSelf;
         }
     }
     
