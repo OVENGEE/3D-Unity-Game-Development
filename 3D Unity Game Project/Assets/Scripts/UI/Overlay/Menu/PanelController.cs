@@ -19,6 +19,8 @@ public class PanelController : MonoBehaviour
             Quit = inputs?.UI.Quit;
             Menu = inputs?.UI.Menu;
         }
+
+        InitialVisibilityState();
     }
 
 
@@ -53,23 +55,48 @@ public class PanelController : MonoBehaviour
         if (!context.performed) return;
         string uiInputCall = context.action.name;
 
-        foreach(panelLibrary panel in panelLibraries)
+        foreach (panelLibrary panel in panelLibraries)
         {
+            
             string currentPanelName = panel.panelName.ToString();
             if (currentPanelName == uiInputCall)
             {
-                panel.panelObject?.SetActive(true);
+                bool newState = !panel.panelObject.activeSelf;
+                Debug.Log($"{panel.panelName.ToString()} Panel: Toggle state = {newState}");
+                panel.panelObject?.SetActive(newState);
+                ResetToHUDPanel(newState);
             }
             else
             {
                 panel.panelObject?.SetActive(false);
             }
-        }
 
-        
+        }
+    }
+
+    private void ResetToHUDPanel(bool state)
+    {
+        if (state) return;
+
+        foreach(var panel in panelLibraries)
+        {
+            if (panel.panelName == PanelType.Tutorial || panel.panelName == PanelType.PlayerHUD)
+            {
+                panel.panelObject.SetActive(true);
+            }
+        }
     }
     
+
     
+    private void InitialVisibilityState()
+    {
+        for(int i = 0; i < panelLibraries.Length; i++)
+        {
+            //The initial visible states of each panel
+            panelLibraries[i].visibilityState = panelLibraries[i].panelObject.activeSelf;
+        }
+    }
 }
 
 public enum PanelType
@@ -87,4 +114,5 @@ public struct panelLibrary
 {
     public PanelType panelName;
     public GameObject panelObject;
+    public bool visibilityState;
 }
