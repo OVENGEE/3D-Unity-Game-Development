@@ -24,7 +24,7 @@ public class QuitApplication : MonoBehaviour
             inputActions = new CustomInputSystem();
             if (quitAction == null)
             {
-                quitAction = inputActions.UI.Escape;
+                quitAction = inputActions.UI.Quit;
             }
         }
     }

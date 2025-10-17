@@ -53,7 +53,7 @@ Material:
     m_Floats:
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Specular_Density: 3.24
+    - _Specular_Density: 9
     - _Specular_Thickness: 2.61
     - _Specular_speed: 0.93
     - _Water_Depth: 1.5
