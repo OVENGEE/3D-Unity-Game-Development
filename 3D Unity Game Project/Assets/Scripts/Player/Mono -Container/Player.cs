@@ -73,7 +73,7 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     public LineRenderer LineRenderer;
-    private LayerMask CollisionMask;
+    //private LayerMask CollisionMask;
 
     [SerializeField]
     public Transform ReleasePosition;
