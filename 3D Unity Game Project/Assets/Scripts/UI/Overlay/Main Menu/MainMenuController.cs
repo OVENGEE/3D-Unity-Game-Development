@@ -6,11 +6,21 @@ using TMPro;
 
 public class MainMenuController : MonoBehaviour
 {
+    [Header("General UI")]
+    [SerializeField] private GameObject confirmationPrompt;
+
+
     [Header("Volume Setting")]
     [SerializeField] private TMP_Text volumeTextValue;
     [SerializeField] private Slider volumeSlider;
-    [SerializeField] private GameObject confirmationPrompt;
+    
     [SerializeField] private float defaultVolumeValue = 0.5f;
+
+    [Header("Controls Setting")]
+    [SerializeField] private TMP_Text controlSenValue;
+    [SerializeField] private Slider senSlider;
+    [SerializeField] private int defaultSen = 50;
+    public int mainSensitivity = 50;
 
     [Header("Level To Load")]
     public string _newGameLevel;
@@ -59,11 +69,23 @@ public class MainMenuController : MonoBehaviour
         //Show Prompt 
         StartCoroutine(ConfirmationBox());
 
-        if(PlayerPrefs.HasKey("masterVolume"))
+        if (PlayerPrefs.HasKey("masterVolume"))
         {
             float volume_Amount = PlayerPrefs.GetFloat("masterVolume");
             Debug.Log($"The game has now an audio of {volume_Amount} %");
         }
+    }
+
+    public void SetSensitivity(float sensitivity)
+    {
+        mainSensitivity = Mathf.RoundToInt(sensitivity);
+        controlSenValue.text = sensitivity.ToString("0");
+    }
+    
+    public void ControlApply()
+    {
+        PlayerPrefs.SetFloat("masterSensitivity", mainSensitivity);
+        StartCoroutine(ConfirmationBox());
     }
 
     public IEnumerator ConfirmationBox()
@@ -82,6 +104,13 @@ public class MainMenuController : MonoBehaviour
             volumeTextValue.text = defaultVolumeValue.ToString("0.0");
             volumeSlider.value = defaultVolumeValue;
             VolumeApply();
+        }
+
+        if (settings == "Control")
+        {
+            controlSenValue.text = defaultSen.ToString("0");
+            senSlider.value = defaultSen;
+            mainSensitivity = defaultSen;
         }
     }
 
