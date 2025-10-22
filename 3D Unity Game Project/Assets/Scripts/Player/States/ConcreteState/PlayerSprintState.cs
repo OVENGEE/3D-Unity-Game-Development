@@ -107,6 +107,7 @@ public class PlayerSprintState : PlayerWalkState
     private void SprintEnded()
     {
         base.playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
+        base.player.canSprint = false;
         OnSprintEffectEnded?.Invoke();
     }
 
