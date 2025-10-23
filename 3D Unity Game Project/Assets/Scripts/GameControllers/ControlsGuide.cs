@@ -8,8 +8,9 @@ public class ControlsGuide : MonoBehaviour
 
     //Control declaration
     [SerializeField] Controls[] controls;
-    private Dictionary<string, Controls> controlDictionary;
+    private Dictionary<ControlType, Controls> controlDictionary;
     private InputDeviceDectector.DeviceType controlDevice = InputDeviceDectector.DeviceType.Keyboard;
+    private bool controlVisibilty = false;
 
     //Raycast declaration
     [SerializeField] float range = 5f;
@@ -28,25 +29,27 @@ public class ControlsGuide : MonoBehaviour
     {
         RaycastHit hit;
         Ray ray = new Ray(maincamera.transform.position, maincamera.transform.forward);
+        controlVisibilty = false;
 
         //Any object (that needs to display) interactables or controls are layer indices 7 and 9 respectively
         if (Physics.Raycast(ray, out hit, range))
         {
-            switch (hit.collider.gameObject.layer)
+            if (hit.collider.TryGetComponent<ControlData>(out ControlData controlData))
             {
-                case 7:
-                    OnControlImageChange?.Invoke(GetControlSprite(""));
-                    break;
-                case 9:
-                    OnControlImageChange?.Invoke(GetControlSprite(""));
-                    break;
+                controlVisibilty = true;
+                OnControlImageChange?.Invoke(GetControlSprite(controlData.controlType));
             }
+        }
+
+        if(!controlVisibilty)
+        {
+            OnControlImageChange?.Invoke(null);
         }
     }
 
     private void InitializeDictionary()
     {
-        controlDictionary = new Dictionary<string, Controls>();
+        controlDictionary = new Dictionary<ControlType, Controls>();
         foreach (var control in controls)
         {
             controlDictionary[control.controlName] = control;
@@ -54,9 +57,9 @@ public class ControlsGuide : MonoBehaviour
     }
 
 
-    public Sprite GetControlSprite(string name)
+    public Sprite GetControlSprite(ControlType name)
     {
-        if (controlDictionary.ContainsKey(name))
+        if (controlDictionary.ContainsKey(name) && controlVisibilty)
         {
             var control = controlDictionary[name];
             switch (controlDevice)
@@ -96,8 +99,10 @@ public class ControlsGuide : MonoBehaviour
 [System.Serializable]
 struct Controls
 {
-    public string controlName;
+    public ControlType controlName;
     public Sprite keyboardSprite;
     public Sprite playStationSprite;
     public Sprite xboxSprite;
 }
+
+

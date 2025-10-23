@@ -17,7 +17,7 @@ public class ControlImageUpdater : MonoBehaviour
 
     void DisplaySprite(Sprite sprite)
     {
-        if (sprite == null || sprite == currentSprite)
+        if (sprite == null)
         {
             imgcolor.a = 0f;
             img.color = imgcolor;
