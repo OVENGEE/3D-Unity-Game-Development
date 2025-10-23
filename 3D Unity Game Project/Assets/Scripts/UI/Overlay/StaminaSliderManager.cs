@@ -13,7 +13,6 @@ public class StaminaSliderManager : MonoBehaviour
             if (sliderVisible != value)
             {
                 sliderVisible = value;
-                Debug.Log($"{sliderVisible} has changed to {value}");
             }
         }
     }
