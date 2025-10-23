@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class TicketManager : MonoBehaviour
 {
-
+    //Event declarations
     public static event Action<int> OnTicketChanged;
+    public static event Action<List<IGame>> OnAvailableGames;
     Action<int> ticketHandler;
     public static int AvailableTickets;
     List<IGame> gamesList = new List<IGame>();
+
 
 
     void Awake()
@@ -27,11 +29,13 @@ public class TicketManager : MonoBehaviour
             Debug.Log($"{AvailableTickets} tickets collected and available!");
         };
         Ticket.OnTicketCollect += ticketHandler;
+        OnTicketChanged += CheckGameAvailabiltiy;
     }
 
     void OnDisable()
     {
         Ticket.OnTicketCollect -= ticketHandler;
+        OnTicketChanged-= CheckGameAvailabiltiy;
     }
 
     void SearchGames()
@@ -54,10 +58,26 @@ public class TicketManager : MonoBehaviour
     {
         foreach (var game in gamesList)
         {
-            Debug.Log($"{game.GameName} is a Game!");
+            Debug.Log($"{game.GameName} is a Game and requires {game.RequiredTickets} tickets to be played!");
         }
 
-        Debug.Log($"Number of miniGames is:{gamesList.Count}");
+        // Debug.Log($"Number of miniGames is:{gamesList.Count}");
+    }
+
+    void CheckGameAvailabiltiy(int tickets)
+    {
+        List<IGame> availableGames = new List<IGame>();
+        foreach (var game in gamesList)
+        {
+            if (tickets >= game.RequiredTickets)
+            {
+                Debug.Log($"Enough tickets collected to play {game.GameName}");
+                availableGames.Add(game);
+            }
+        }
+
+        //Invoke event on available games and notify the miniGameManager
+        OnAvailableGames.Invoke(new List<IGame>(availableGames));
     }
 }
 
