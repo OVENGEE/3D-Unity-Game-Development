@@ -1,4 +1,5 @@
 using System;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,8 +16,20 @@ public class PanelController : MonoBehaviour
     //Panel variables
     int panelIndex;
 
+    //Camera 
+    private Camera camera;
+
+    //Layers
+    int unavailableLayerMask = 1 << UnAvailableGameLayer;
+
+    //Constants
+
+    const int UnAvailableGameLayer = 8;
+
     private void Awake()
     {
+        camera = Camera.main;
+
         if (inputs == null)
         {
             inputs = new CustomInputSystem();
@@ -77,13 +90,18 @@ public class PanelController : MonoBehaviour
 
             }
         }
-        
+
         //Update visibility state
-        for(panelIndex =0; panelIndex < panelLibraries.Length; panelIndex++)
+        for (panelIndex = 0; panelIndex < panelLibraries.Length; panelIndex++)
         {
             panelLibraries[panelIndex].visibilityState = panelLibraries[panelIndex].panelObject.activeSelf;
             panelIndex++;
         }
+    }
+
+    private void Update()
+    {
+        UnAvailableGamePanelTrigger();
     }
 
     private void ResetToHUDPanel(bool state)
@@ -104,15 +122,42 @@ public class PanelController : MonoBehaviour
             panelLibraries[panelIndex].visibilityState = panelLibraries[panelIndex].panelObject.activeSelf;
         }
     }
-    
 
-    
+
+
     private void InitialVisibilityState()
     {
-        for(int i = 0; i < panelLibraries.Length; i++)
+        for (int i = 0; i < panelLibraries.Length; i++)
         {
             //The initial visible states of each panel
             panelLibraries[i].visibilityState = panelLibraries[i].panelObject.activeSelf;
+        }
+    }
+    
+
+    private void UnAvailableGamePanelTrigger()
+    {
+        RaycastHit hit;
+
+        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
+        if (Physics.Raycast(ray, out hit,5f,unavailableLayerMask))
+        {
+            Debug.Log($"{hit.collider.name} is in the layer: {hit.collider.gameObject.layer}");
+            foreach (var panelbook in panelLibraries)
+            {
+                if (panelbook.panelName == PanelType.UnAvailableGame)
+                {
+                    panelbook.panelObject.SetActive(true);
+                }
+                else
+                {
+                    panelbook.panelObject.SetActive(false);
+                }
+            }
+        }
+        else
+        {
+            ResetToHUDPanel(true);
         }
     }
 }
@@ -124,7 +169,8 @@ public enum PanelType
     Menu,
     Quit,
     DuckShootingGame,
-    BasketBallGame
+    BasketBallGame,
+    UnAvailableGame
 }
 
 [System.Serializable]
