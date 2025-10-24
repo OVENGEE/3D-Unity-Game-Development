@@ -9,4 +9,13 @@ public interface IGame
     public bool TryPlay();
     public void InitialiseGame(BaseGame game);
     public void DetermineGameAvailability(int ticket);
+
+    public GameType gameType { get; set; }
+}
+
+public enum GameType
+{
+    DuckShootingType,
+    BasketBallType,
+    MazeType
 }

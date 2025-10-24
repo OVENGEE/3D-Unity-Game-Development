@@ -10,7 +10,7 @@ public class DuckGame : MonoBehaviour, IGame,IGameCompleted
     public int RequiredTickets { get; set; }
     public string GameName { get; set; }
     public bool isUnlocked { get; set; }
-
+    public GameType gameType { get; set;}
 
     Interaction interaction;
 
@@ -44,6 +44,7 @@ public class DuckGame : MonoBehaviour, IGame,IGameCompleted
         RequiredTickets = game.RequiredTickets;
         GameName = game.GameName;
         isUnlocked = false;
+        gameType = GameType.DuckShootingType;
     }
 
 

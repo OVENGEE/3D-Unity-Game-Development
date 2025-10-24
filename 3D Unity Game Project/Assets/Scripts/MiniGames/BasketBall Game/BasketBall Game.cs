@@ -8,6 +8,7 @@ public class BasketBallGame : MonoBehaviour,IGame,IGameCompleted
     public int RequiredTickets { get ; set; }
     public string GameName { get ; set;  }
     public bool isUnlocked { get ; set; }
+    public GameType gameType { get; set; }
 
     public event Action OnGameCompleted;
 
@@ -36,6 +37,7 @@ public class BasketBallGame : MonoBehaviour,IGame,IGameCompleted
         RequiredTickets = game.RequiredTickets;
         GameName = game.GameName;
         isUnlocked = false;
+        gameType = GameType.BasketBallType;
     }
 
     public bool TryPlay()

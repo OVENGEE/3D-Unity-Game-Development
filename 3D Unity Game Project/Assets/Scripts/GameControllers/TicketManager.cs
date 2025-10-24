@@ -71,7 +71,7 @@ public class TicketManager : MonoBehaviour
         {
             if (tickets >= game.RequiredTickets)
             {
-                Debug.Log($"Enough tickets collected to play {game.GameName}");
+                //Debug.Log($"Enough tickets collected to play {game.GameName}");
                 availableGames.Add(game);
             }
         }
