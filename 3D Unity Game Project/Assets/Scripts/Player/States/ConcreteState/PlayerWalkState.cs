@@ -135,7 +135,6 @@ public class PlayerWalkState : PlayerState
     {
         if (base.player.canSprint)
         {
-            Debug.Log($"Sprint Ability: {base.player.canSprint}");
             playerStateMachine.SwitchState(new PlayerSprintState(player, playerStateMachine));
         }
     }

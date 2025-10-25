@@ -7,6 +7,7 @@ public class MouseMovement : MonoBehaviour
 {
     CustomInputSystem inputs;
     InputAction lookAction;
+    
 
     //Pointer info
     [SerializeField] GameObject [] selectedObjects;

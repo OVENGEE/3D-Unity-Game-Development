@@ -10,7 +10,7 @@ public class DuckGame : MonoBehaviour, IGame,IGameCompleted
     public int RequiredTickets { get; set; }
     public string GameName { get; set; }
     public bool isUnlocked { get; set; }
-
+    public GameType gameType { get; set;}
 
     Interaction interaction;
 
@@ -21,7 +21,7 @@ public class DuckGame : MonoBehaviour, IGame,IGameCompleted
     void Awake()
     {
         interaction = GetComponent<Interaction>();
-        InitializeGame(gameinfo);
+        InitialiseGame(gameinfo);
     }
 
     void OnEnable()
@@ -39,11 +39,12 @@ public class DuckGame : MonoBehaviour, IGame,IGameCompleted
 
     }
 
-    public void InitializeGame(BaseGame game)
+    public void InitialiseGame(BaseGame game)
     {
         RequiredTickets = game.RequiredTickets;
         GameName = game.GameName;
         isUnlocked = false;
+        gameType = GameType.DuckShootingType;
     }
 
 

@@ -110,7 +110,6 @@ public class PlayerThrowState : PlayerWalkState,ITriggerHandler
             if (aimAction.IsPressed())
             {
                 lineRenderer.enabled = true;
-                lineRenderer.startColor = Color.white;
             }
             else
             {

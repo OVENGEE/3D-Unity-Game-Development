@@ -7,6 +7,15 @@ public interface IGame
     bool isUnlocked { get; set; }
 
     public bool TryPlay();
-    public void InitializeGame(BaseGame game);
+    public void InitialiseGame(BaseGame game);
     public void DetermineGameAvailability(int ticket);
+
+    public GameType gameType { get; set; }
+}
+
+public enum GameType
+{
+    DuckShootingType,
+    BasketBallType,
+    MazeType
 }

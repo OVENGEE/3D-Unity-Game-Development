@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,12 +13,33 @@ public class PanelController : MonoBehaviour
     InputAction Quit;
     InputAction Menu;
 
+    //Timing variables
+    private float unavailablePanelCooldown = 0.2f;
+    private float timeSinceLastHit;
 
-    //Panel variables
-    int panelIndex;
+    //Panel dictionary
+    private Dictionary<PanelType, GameObject> panelMap;
+    private bool isManualPanelOpen = false;
+
+    //Camera 
+    private Camera camera;
+
+    //Events
+    public static event Action OnUnAvailableGame;
+
+    
+
+
+    //Layer Setup
+    int unavailableLayerMask;
+    const int UnAvailableGameLayer = 8;
 
     private void Awake()
     {
+        camera = Camera.main;
+        unavailableLayerMask = 1 << UnAvailableGameLayer;
+        timeSinceLastHit = Time.time;
+
         if (inputs == null)
         {
             inputs = new CustomInputSystem();
@@ -24,7 +47,19 @@ public class PanelController : MonoBehaviour
             Menu = inputs?.UI.Menu;
         }
 
-        InitialVisibilityState();
+        //Build the dictionary for quick access
+        panelMap = new Dictionary<PanelType, GameObject>();
+        foreach (var panel in panelLibraries)
+        {
+            if (!panelMap.ContainsKey(panel.panelName))
+                panelMap.Add(panel.panelName, panel.panelObject);
+        }
+        
+        for(int i =0; i < panelLibraries.Length; i++)
+        {
+            panelLibraries[i].visibilityState = panelLibraries[i].panelObject.activeSelf;
+        }
+
     }
 
 
@@ -38,6 +73,7 @@ public class PanelController : MonoBehaviour
         //Action subscriptions
         Quit.performed += ActiveInputPanelManager;
         Menu.performed += ActiveInputPanelManager;
+        TutorialID.OnTutorialTrigger += SetActivePanel;
     }
 
 
@@ -45,8 +81,9 @@ public class PanelController : MonoBehaviour
     {
         //Action unsubscriptions
         Quit.performed -= ActiveInputPanelManager;
-        Menu.performed -= ActiveInputPanelManager; 
-
+        Menu.performed -= ActiveInputPanelManager;
+        TutorialID.OnTutorialTrigger -= SetActivePanel;
+        
         //Input Actions disabling
         Quit?.Disable();
         Menu?.Disable();
@@ -58,63 +95,99 @@ public class PanelController : MonoBehaviour
     {
         if (!context.performed) return;
         string uiInputCall = context.action.name;
-        panelIndex = 0;
 
-        foreach (panelLibrary panel in panelLibraries)
+        // Try to match the input name with a panel type
+        if (Enum.TryParse(uiInputCall, out PanelType panelType))
         {
+            bool isActive = panelMap.ContainsKey(panelType) && panelMap[panelType].activeSelf;
+            bool newState = !isActive;
 
-            string currentPanelName = panel.panelName.ToString();
-            if (currentPanelName == uiInputCall)
+            Debug.Log($"{panelType} Panel: Toggle state = {newState}");
+
+            if (newState)
             {
-                bool newState = !panel.panelObject.activeSelf;
-                Debug.Log($"{panel.panelName.ToString()} Panel: Toggle state = {newState}");
-                panel.panelObject?.SetActive(newState);
-                ResetToHUDPanel(newState);
+                isManualPanelOpen = true;
+                SetActivePanel(panelType);
             }
             else
             {
-                panel.panelObject?.SetActive(false);
-
+                isManualPanelOpen = false;
+                ResetToHUDPanel();
             }
+                
         }
-        
-        //Update visibility state
-        for(panelIndex =0; panelIndex < panelLibraries.Length; panelIndex++)
+        else
         {
-            panelLibraries[panelIndex].visibilityState = panelLibraries[panelIndex].panelObject.activeSelf;
-            panelIndex++;
+            Debug.LogWarning($"No panel found matching input action '{uiInputCall}'.");
         }
     }
 
-    private void ResetToHUDPanel(bool state)
+    private void Update()
     {
-        if (state) return;
-        panelIndex = 0;
-        foreach (var panel in panelLibraries)
+        UnAvailableGamePanelTrigger();
+    }
+
+    public void ResetToHUDPanel()
+    {
+        isManualPanelOpen = false;
+        foreach (var pair in panelMap)
         {
-            if (panel.panelName == PanelType.Tutorial || panel.panelName == PanelType.PlayerHUD)
+            bool shouldBeActive = (pair.Key == PanelType.PlayerHUD);
+            pair.Value.SetActive(shouldBeActive);
+        }
+
+        UpdateVisibilityState();
+    }
+
+
+
+    private void SetActivePanel(PanelType targetPanel)
+    {
+        isManualPanelOpen = true;
+        foreach (var pair in panelMap)
+        {
+            bool shouldBeActive = pair.Key == targetPanel;
+            Debug.Log($"Target Panel:{targetPanel} == > {shouldBeActive}");
+            pair.Value.SetActive(shouldBeActive);
+
+        }
+        UpdateVisibilityState();
+    }
+
+    private void UpdateVisibilityState()
+    {
+        for(int i =0; i < panelLibraries.Length; i++)
+        {
+            if (panelMap.TryGetValue(panelLibraries[i].panelName, out var obj))
+                panelLibraries[i].visibilityState = obj.activeSelf;
+        }
+    }
+
+    private void UnAvailableGamePanelTrigger()
+    {
+        if (isManualPanelOpen) return;
+        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 5f, unavailableLayerMask))
+        {
+            timeSinceLastHit = Time.time;
+            foreach (var panelbook in panelLibraries)
             {
-                panel.panelObject.SetActive(true);
+                if (panelbook.panelName == PanelType.UnAvailableGame)
+                {
+                    OnUnAvailableGame?.Invoke();//Invoke the event if the UnAvailableGamePanel on
+                    panelbook.panelObject.SetActive(true);
+                }
+                else
+                    panelbook.panelObject.SetActive(false);
             }
         }
-        
-        //Update visibility state
-        for(panelIndex =0; panelIndex < panelLibraries.Length; panelIndex++)
+        else if (Time.time - timeSinceLastHit > unavailablePanelCooldown)
         {
-            panelLibraries[panelIndex].visibilityState = panelLibraries[panelIndex].panelObject.activeSelf;
+            ResetToHUDPanel();
         }
     }
     
-
-    
-    private void InitialVisibilityState()
-    {
-        for(int i = 0; i < panelLibraries.Length; i++)
-        {
-            //The initial visible states of each panel
-            panelLibraries[i].visibilityState = panelLibraries[i].panelObject.activeSelf;
-        }
-    }
 }
 
 public enum PanelType
@@ -124,7 +197,8 @@ public enum PanelType
     Menu,
     Quit,
     DuckShootingGame,
-    BasketBallGame
+    BasketBallGame,
+    UnAvailableGame
 }
 
 [System.Serializable]
