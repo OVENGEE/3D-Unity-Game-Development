@@ -125,7 +125,7 @@ public class PanelController : MonoBehaviour
         UnAvailableGamePanelTrigger();
     }
 
-    private void ResetToHUDPanel()
+    public void ResetToHUDPanel()
     {
         foreach (var pair in panelMap)
         {
@@ -171,7 +171,7 @@ public class PanelController : MonoBehaviour
             foreach (var panelbook in panelLibraries)
             {
                 if (panelbook.panelName == PanelType.UnAvailableGame)
-                {          
+                {
                     OnUnAvailableGame?.Invoke();//Invoke the event if the UnAvailableGamePanel on
                     panelbook.panelObject.SetActive(true);
                 }
@@ -181,9 +181,10 @@ public class PanelController : MonoBehaviour
         }
         else if (Time.time - timeSinceLastHit > unavailablePanelCooldown)
         {
-            ResetToHUDPanel();
+            //ResetToHUDPanel();
         }
     }
+    
 }
 
 public enum PanelType
