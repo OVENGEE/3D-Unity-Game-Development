@@ -73,6 +73,7 @@ public class PanelController : MonoBehaviour
         //Action subscriptions
         Quit.performed += ActiveInputPanelManager;
         Menu.performed += ActiveInputPanelManager;
+        TutorialID.OnTutorialTrigger += SetActivePanel;
     }
 
 
@@ -80,8 +81,9 @@ public class PanelController : MonoBehaviour
     {
         //Action unsubscriptions
         Quit.performed -= ActiveInputPanelManager;
-        Menu.performed -= ActiveInputPanelManager; 
-
+        Menu.performed -= ActiveInputPanelManager;
+        TutorialID.OnTutorialTrigger -= SetActivePanel;
+        
         //Input Actions disabling
         Quit?.Disable();
         Menu?.Disable();
@@ -127,6 +129,7 @@ public class PanelController : MonoBehaviour
 
     public void ResetToHUDPanel()
     {
+        isManualPanelOpen = false;
         foreach (var pair in panelMap)
         {
             bool shouldBeActive = (pair.Key == PanelType.PlayerHUD);
@@ -140,7 +143,7 @@ public class PanelController : MonoBehaviour
 
     private void SetActivePanel(PanelType targetPanel)
     {
-        
+        isManualPanelOpen = true;
         foreach (var pair in panelMap)
         {
             bool shouldBeActive = pair.Key == targetPanel;
@@ -181,7 +184,7 @@ public class PanelController : MonoBehaviour
         }
         else if (Time.time - timeSinceLastHit > unavailablePanelCooldown)
         {
-            //ResetToHUDPanel();
+            ResetToHUDPanel();
         }
     }
     
