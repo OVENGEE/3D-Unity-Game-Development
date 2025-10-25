@@ -19,12 +19,15 @@ public class PanelController : MonoBehaviour
 
     //Panel dictionary
     private Dictionary<PanelType, GameObject> panelMap;
+    private bool isManualPanelOpen = false;
 
     //Camera 
     private Camera camera;
 
     //Events
     public static event Action OnUnAvailableGame;
+
+    
 
 
     //Layer Setup
@@ -91,6 +94,7 @@ public class PanelController : MonoBehaviour
         if (!context.performed) return;
         string uiInputCall = context.action.name;
 
+        // Try to match the input name with a panel type
         if (Enum.TryParse(uiInputCall, out PanelType panelType))
         {
             bool isActive = panelMap.ContainsKey(panelType) && panelMap[panelType].activeSelf;
@@ -100,12 +104,15 @@ public class PanelController : MonoBehaviour
 
             if (newState)
             {
+                isManualPanelOpen = true;
                 SetActivePanel(panelType);
             }
             else
             {
+                isManualPanelOpen = false;
                 ResetToHUDPanel();
             }
+                
         }
         else
         {
@@ -122,7 +129,7 @@ public class PanelController : MonoBehaviour
     {
         foreach (var pair in panelMap)
         {
-            bool shouldBeActive = (pair.Key == PanelType.PlayerHUD || pair.Key == PanelType.Tutorial);
+            bool shouldBeActive = (pair.Key == PanelType.PlayerHUD);
             pair.Value.SetActive(shouldBeActive);
         }
 
@@ -133,13 +140,14 @@ public class PanelController : MonoBehaviour
 
     private void SetActivePanel(PanelType targetPanel)
     {
+        
         foreach (var pair in panelMap)
         {
-            pair.Value.SetActive(pair.Key == targetPanel);
+            bool shouldBeActive = pair.Key == targetPanel;
+            Debug.Log($"Target Panel:{targetPanel} == > {shouldBeActive}");
+            pair.Value.SetActive(shouldBeActive);
+
         }
-
-
-
         UpdateVisibilityState();
     }
 
@@ -154,6 +162,7 @@ public class PanelController : MonoBehaviour
 
     private void UnAvailableGamePanelTrigger()
     {
+        if (isManualPanelOpen) return;
         Ray ray = new Ray(camera.transform.position, camera.transform.forward);
 
         if (Physics.Raycast(ray, out RaycastHit hit, 5f, unavailableLayerMask))

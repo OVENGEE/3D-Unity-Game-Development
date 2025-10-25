@@ -1064,10 +1064,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Confetti_Effect
       objectReference: {fileID: 0}
-    - target: {fileID: 8314471156391592407, guid: d1cb6ab87ff777a48b337ca5419157d3, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
