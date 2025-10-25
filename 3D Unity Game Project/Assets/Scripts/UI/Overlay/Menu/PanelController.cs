@@ -20,11 +20,11 @@ public class PanelController : MonoBehaviour
     //Panel dictionary
     private Dictionary<PanelType, GameObject> panelMap;
 
-    //Panel variables
-    int panelIndex;
-
     //Camera 
     private Camera camera;
+
+    //Events
+    public static event Action OnUnAvailableGame;
 
 
     //Layer Setup
@@ -138,6 +138,8 @@ public class PanelController : MonoBehaviour
             pair.Value.SetActive(pair.Key == targetPanel);
         }
 
+
+
         UpdateVisibilityState();
     }
 
@@ -160,7 +162,10 @@ public class PanelController : MonoBehaviour
             foreach (var panelbook in panelLibraries)
             {
                 if (panelbook.panelName == PanelType.UnAvailableGame)
+                {          
+                    OnUnAvailableGame?.Invoke();//Invoke the event if the UnAvailableGamePanel on
                     panelbook.panelObject.SetActive(true);
+                }
                 else
                     panelbook.panelObject.SetActive(false);
             }
