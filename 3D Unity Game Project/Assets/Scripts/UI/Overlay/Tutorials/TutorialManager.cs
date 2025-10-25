@@ -68,9 +68,15 @@ public class TutorialManager : MonoBehaviour
         if (!currentTutorial.played)
         {
             var currentTutClip = currentTutorial.tutorialClip;
-            PlayVideo(currentTutClip);           
+            PlayVideo(currentTutClip);
         }
 
+    }
+    
+    private void TutorialMessage(string message)
+    {
+        currentTutorial.tutorialDescription = message;
+        //Add the text to be updated
     }
     
     public void CloseVideo()
@@ -81,11 +87,11 @@ public class TutorialManager : MonoBehaviour
 
 public enum TutorialType
 {
-    Move,
     Sprint,
     Crouch,
     BasketBallTut,
-    ShootingTut
+    ShootingTut,
+    Jump
 }
 
 [System.Serializable]
