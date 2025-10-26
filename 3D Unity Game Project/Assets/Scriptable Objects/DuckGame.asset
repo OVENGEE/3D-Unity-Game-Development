@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: DuckGame
   m_EditorClassIdentifier: 
   GameName: DuckShooting
-  RequiredTickets: 6
+  RequiredTickets: 4

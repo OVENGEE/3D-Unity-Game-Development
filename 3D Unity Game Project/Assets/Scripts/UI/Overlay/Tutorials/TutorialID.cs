@@ -18,12 +18,16 @@ public class TutorialID : MonoBehaviour
     {
         if (other.CompareTag("Player") && !isTriggered)
         {
-            OnTutorialTypeTrigger?.Invoke(tutorialType);
-            OnTutorialTrigger?.Invoke(PanelType.Tutorial);
-            Debug.Log($"{other.name} has triggered a {tutorialType} tutorial");
-            isTriggered = true;
+            TriggerTutorial();
         }
     }
 
+
+    public void TriggerTutorial()
+    {
+        OnTutorialTypeTrigger?.Invoke(tutorialType);
+        OnTutorialTrigger?.Invoke(PanelType.Tutorial);
+        isTriggered = true;
+    }
 
 }
