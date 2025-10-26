@@ -129,8 +129,8 @@ public class Player : MonoBehaviour
     public void OnDisable()
     {
         //Unsubscribe the events and disable input
-        PanelController.OnEnablePlayerInput -= EnablePlayerInput;
         inputs.Disable();
+        PanelController.OnEnablePlayerInput -= EnablePlayerInput;
     }
 
     public void SwitchToShootState()

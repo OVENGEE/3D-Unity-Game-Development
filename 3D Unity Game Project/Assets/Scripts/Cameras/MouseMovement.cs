@@ -26,9 +26,6 @@ public class MouseMovement : MonoBehaviour
                 lookAction = inputs?.Player.Look;
             }
         }
-
-        //Locking the cursor to the middle of the screen 
-        // Cursor.lockState = CursorLockMode.Locked;
     }
 
     void OnEnable()
