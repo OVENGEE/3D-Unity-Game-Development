@@ -113,6 +113,7 @@ public class Player : MonoBehaviour
     {
         //Enable input and subscribe events
         inputs.Enable();
+        PanelController.OnEnablePlayerInput += EnablePlayerInput;
     }
 
     void Update()
@@ -128,6 +129,7 @@ public class Player : MonoBehaviour
     public void OnDisable()
     {
         //Unsubscribe the events and disable input
+        PanelController.OnEnablePlayerInput -= EnablePlayerInput;
         inputs.Disable();
     }
 
@@ -181,6 +183,14 @@ public class Player : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         (StateMachine.CurrentPlayerState as ITriggerHandler)?.OnTriggerExit(other);
+    }
+
+    private void EnablePlayerInput(bool state)
+    {
+        if (state)
+            inputs?.Player.Enable();
+        else
+            inputs?.Player.Disable();
     }
     
     private void NullChecks()
