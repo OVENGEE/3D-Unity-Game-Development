@@ -58,6 +58,10 @@ public class NPC : MonoBehaviour, IInteractable
 
     void StartDialogue()
     {
+        //Cursor visibility
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
         if (dialogueData == null || dialogueData.dialogueLines.Length == 0) return;
 
         isDialogueActive = true;
@@ -120,5 +124,9 @@ public class NPC : MonoBehaviour, IInteractable
         isDialogueActive = false;
         if (dialogueText != null) dialogueText.SetText("");
         if (dialoguePanel != null) dialoguePanel.SetActive(false);
+
+        //Cursor lock and make invisible
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 }

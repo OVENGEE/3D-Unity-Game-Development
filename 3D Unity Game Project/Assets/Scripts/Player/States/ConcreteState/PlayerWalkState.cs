@@ -26,6 +26,7 @@ public class PlayerWalkState : PlayerState
     protected Slider slider;
 
 
+
     public PlayerWalkState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
     }

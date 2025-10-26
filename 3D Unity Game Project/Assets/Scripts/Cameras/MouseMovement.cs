@@ -15,25 +15,24 @@ public class MouseMovement : MonoBehaviour
     private float xRotation = 0f;
     private float yRotation = 0f;
 
+    //Transform
+    [SerializeField] private Transform head; 
+
+    //Camera variables
+    private Camera camera;
+
 
     void Awake()
     {
-        if (inputs == null)
-        {
-            inputs = new CustomInputSystem();
-            if (lookAction == null)
-            {
-                lookAction = inputs?.Player.Look;
-            }
-        }
+        camera = Camera.main;
+        inputs = new CustomInputSystem();
+        lookAction = inputs?.Player.Look;
     }
 
     void OnEnable()
     {
         inputs.Enable();
         PanelController.OnEnablePlayerInput += EnablePlayerInput;
-        // Cursor.visible = false;
-        // Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
@@ -47,13 +46,15 @@ public class MouseMovement : MonoBehaviour
         xRotation -= mouseY;
 
         //clamp the rotation so we cant over-rotation (like in real life)
-        xRotation = Mathf.Clamp(xRotation, -45f, 90f);
+        xRotation = Mathf.Clamp(xRotation, -45f, 60f);
 
         //Control rotation around y axis ( look up and down)
         yRotation += mouseX;
+        //yRotation = Mathf.Clamp(yRotation, 30f, 90f);
 
-        //applying both rotations
-        transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+        head.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        // Yaw (left/right) — affects the whole body
+        transform.Rotate(Vector3.up * mouseX);
     }
 
     private void EnablePlayerInput(bool state)
