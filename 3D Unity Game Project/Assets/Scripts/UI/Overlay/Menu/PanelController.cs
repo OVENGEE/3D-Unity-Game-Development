@@ -26,6 +26,7 @@ public class PanelController : MonoBehaviour
 
     //Events
     public static event Action OnUnAvailableGame;
+    public static event Action<bool> OnEnablePlayerInput;
 
     
 
@@ -137,6 +138,12 @@ public class PanelController : MonoBehaviour
         }
 
         UpdateVisibilityState();
+        //Re-enable player input
+        OnEnablePlayerInput?.Invoke(true);
+
+        //Cursor lock and make invisible
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
 
@@ -152,6 +159,13 @@ public class PanelController : MonoBehaviour
 
         }
         UpdateVisibilityState();
+
+        //Disable player input
+        OnEnablePlayerInput?.Invoke(false);
+
+        //Cursor unlock and make visible
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     private void UpdateVisibilityState()

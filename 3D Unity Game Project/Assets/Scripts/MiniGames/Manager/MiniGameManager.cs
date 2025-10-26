@@ -16,6 +16,8 @@ public class MiniGameManager : MonoBehaviour
     const int InteractableLayer = 7;
     const int UnavailableLayer = 8;
 
+    //
+
 
     private void Awake()
     {

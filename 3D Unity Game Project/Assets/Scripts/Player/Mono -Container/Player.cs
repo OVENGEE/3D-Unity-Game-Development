@@ -113,6 +113,7 @@ public class Player : MonoBehaviour
     {
         //Enable input and subscribe events
         inputs.Enable();
+        PanelController.OnEnablePlayerInput += EnablePlayerInput;
     }
 
     void Update()
@@ -129,6 +130,7 @@ public class Player : MonoBehaviour
     {
         //Unsubscribe the events and disable input
         inputs.Disable();
+        PanelController.OnEnablePlayerInput -= EnablePlayerInput;
     }
 
     public void SwitchToShootState()
@@ -151,7 +153,7 @@ public class Player : MonoBehaviour
 
     public IEnumerator StaminaRecover(float currentStamina)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.3f);
         float staminaValue;
         staminaTimer = currentStamina;
         while (staminaTimer < MaxStamina)
@@ -181,6 +183,14 @@ public class Player : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         (StateMachine.CurrentPlayerState as ITriggerHandler)?.OnTriggerExit(other);
+    }
+
+    private void EnablePlayerInput(bool state)
+    {
+        if (state)
+            inputs?.Player.Enable();
+        else
+            inputs?.Player.Disable();
     }
     
     private void NullChecks()

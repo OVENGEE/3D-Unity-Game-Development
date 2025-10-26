@@ -9,12 +9,8 @@ public class MouseMovement : MonoBehaviour
     InputAction lookAction;
     
 
-    //Pointer info
-    [SerializeField] GameObject [] selectedObjects;
-
-
     //Mouse settings
-    public float mouseSensitivity = 100f;
+    public float mouseSensitivity = 50f;
 
     private float xRotation = 0f;
     private float yRotation = 0f;
@@ -30,34 +26,19 @@ public class MouseMovement : MonoBehaviour
                 lookAction = inputs?.Player.Look;
             }
         }
-
-        //Locking the cursor to the middle of the screen 
-        // Cursor.lockState = CursorLockMode.Locked;
     }
 
     void OnEnable()
     {
         inputs.Enable();
+        PanelController.OnEnablePlayerInput += EnablePlayerInput;
+        // Cursor.visible = false;
+        // Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Checks if the pointer is on a UI element if so make it appear!
-        /*if (EventSystem.current.IsPointerOverGameObject())
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-        else
-        {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-        }*/
-
-
-
-
         //Mouse input directions
         float mouseX = lookAction.ReadValue<Vector2>().x * mouseSensitivity * Time.deltaTime;
         float mouseY = lookAction.ReadValue<Vector2>().y * mouseSensitivity * Time.deltaTime;
@@ -75,10 +56,18 @@ public class MouseMovement : MonoBehaviour
         transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
     }
 
+    private void EnablePlayerInput(bool state)
+    {
+        if (state)
+            inputs?.Player.Enable();
+        else
+            inputs?.Player.Disable();
+    }
+
     void OnDisable()
     {
+        PanelController.OnEnablePlayerInput -= EnablePlayerInput;
         inputs.Disable();
-        Cursor.visible = true;
     }
 }
 

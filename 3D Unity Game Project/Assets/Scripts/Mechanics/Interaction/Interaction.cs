@@ -106,7 +106,7 @@ public class Interaction : MonoBehaviour
 
             if (interactAction == null)
             {
-                interactAction = inputs.Player.Interact;
+                interactAction = inputs.UI.Interact;
             }
 
             if (lookAction == null)
