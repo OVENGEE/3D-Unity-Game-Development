@@ -6,6 +6,8 @@ public interface IInteractable
     public UnityEvent onInteract { get; protected set; }
     public void Interact();
 
+    public bool CanInteract();
+
 }
 
 //Code references:

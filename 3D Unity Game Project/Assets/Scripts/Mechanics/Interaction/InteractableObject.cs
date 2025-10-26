@@ -11,6 +11,11 @@ public class InteractableObject : MonoBehaviour, IInteractable
         set => _onInteract = value;
     }
 
+    public bool CanInteract()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public void Interact() => _onInteract.Invoke();
 
 }
