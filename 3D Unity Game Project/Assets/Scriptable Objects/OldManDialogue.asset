@@ -12,11 +12,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc215ac679c4fe4a9656feabc3d2f7a, type: 3}
   m_Name: OldManDialogue
   m_EditorClassIdentifier: 
-  npcName: BradNips
+  npcName: 
   dialogueLines:
-  - Why are you here
-  - To finish what I started
-  autoProgressLines: 0100
+  - 'BradNips:  I haven''t seen that simple face in forever. Why are you here? '
+  - 'Jeff: To finish what I started.'
+  - 'Brad Nips: What you started?'
+  - 'Brad Nips: Yes, it was you.'
+  - "Brad Nips: You made this park like this, trying to achieve the unattainable,
+    not even i dared to try that, that\u2019s how i made it to be."
+  - 'Brad Nips: UNIT YOU! Came closer to overcoming all the trials, CLOSER than anyone
+    has ever been'
+  - 'Brad Nips: AND because of that everyone thought they were also chosen ones,
+    they thought they were the heroes,'
+  - 'Brad Nips: and that is what has become of the park as the result.'
+  - 'Jeff: How is this my doing,'
+  - 'Jeff: I came here every year, giving it my best, overworking myself every time
+    the carnival was open.'
+  - 'Jeff: Nobody wanted to archive it as much as I did, and what did I get in return?'
+  - 'Jeff: NOTHING, I had to leave everything behind, my efforts , my time, my sacrifices.'
+  - 'Brad Nips: Sacrifices?'
+  - 'Brad Nips: You know nothing of such,'
+  - "Brad Nips: you know how much I've sacrificed in order to turn this place into
+    what it is today, to make sure \u201Cit\u2019s\u201D still unattainable by those
+    who are unworthy of such."
+  - 'Brad Nips: This place is no longer an amusement park, It''s a mix of all the
+    MESHED UP things you could not even think of. '
+  - 'Brad Nips:  Now, tell me, you''ve come back, with all these changes that you
+    see around you.'
+  - 'Brad Nips: Do you think you can attain the unattainable?'
+  - 'Brad Nips: If you believe so, you may go, because that is the first step.'
+  autoProgressLines: 01010101010101010101010101010101010100
   autoProgressDelay: 1.5
   typingSpeed: 0.05
   voiceSound: {fileID: 0}
