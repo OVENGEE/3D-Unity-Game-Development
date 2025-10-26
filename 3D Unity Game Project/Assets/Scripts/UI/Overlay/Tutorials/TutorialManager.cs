@@ -64,7 +64,7 @@ public class TutorialManager : MonoBehaviour
     private void TutorialPlay(TutorialType tutorial)
     {
         currentTutorial = tutorialMap[tutorial];
-        Debug.Log($"Current tutorial: {tutorial}");
+        // Debug.Log($"Current tutorial: {tutorial}");
         if (!currentTutorial.played)
         {
             var currentTutClip = currentTutorial.tutorialClip;

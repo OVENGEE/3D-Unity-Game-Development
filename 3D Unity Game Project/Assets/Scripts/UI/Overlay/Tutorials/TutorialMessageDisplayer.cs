@@ -5,28 +5,31 @@ using UnityEngine.InputSystem;
 
 public class TutorialMessageDisplayer : MonoBehaviour
 {
+    //Input variables
     CustomInputSystem input;
     private PlayerInput playerInput;
 
-    //All input actions needed
-    InputAction jump;
-    InputAction sprint;
-    InputAction crouch;
-    InputAction aim;
-    InputAction pickUp;
-    InputAction throwAction;
-    InputAction shootAction;
-    InputAction interact;
+    private PlayerInput currentInput;
+
+
 
     //Dictionary
     private Dictionary<TutorialType, List<InputAction>> tutorialInputMap;
 
+
+    //Event declaration
+    public static event Action<string> OnTutorialUIUpdate;
 
 
     private void Awake()
     {
         input = new CustomInputSystem();
         playerInput = FindFirstObjectByType<PlayerInput>();
+
+        if (playerInput == null)
+        {
+            Debug.LogError("PlayerInput not found");
+        }
 
         // Build the mapping between TutorialType and InputAction
         tutorialInputMap = new Dictionary<TutorialType, List<InputAction>>()
@@ -44,12 +47,14 @@ public class TutorialMessageDisplayer : MonoBehaviour
     private void OnEnable()
     {
         playerInput.onControlsChanged += UpdateTutorialUI;
+        TutorialID.OnTutorialTypeTrigger += UpdateTutorialUI;
     }
 
 
     private void OnDisable()
     {
         playerInput.onControlsChanged -= UpdateTutorialUI;
+        TutorialID.OnTutorialTypeTrigger -= UpdateTutorialUI;
     }
 
         // Overloaded helper: default when only control scheme changes
@@ -57,28 +62,32 @@ public class TutorialMessageDisplayer : MonoBehaviour
     {
         // If you want to update all displayed hints when the player swaps devices
         Debug.Log($"Control scheme changed to: {input.currentControlScheme}");
+        // currentInput = input;
     }
 
     // Main logic for a specific tutorial
-    private void UpdateTutorialUI(PlayerInput input, TutorialType tutorialType)
+    private void UpdateTutorialUI(TutorialType tutorialType)
     {
+        
         if (!tutorialInputMap.TryGetValue(tutorialType, out var action))
         {
             Debug.LogWarning($"No action found for tutorial type: {tutorialType}");
             return;
         }
 
-        string scheme = input.currentControlScheme;
+        string scheme = playerInput.currentControlScheme;
         string bindingText = GetBindingDisplayName(action, scheme);
-
+        Debug.Log(bindingText);
+        OnTutorialUIUpdate?.Invoke(bindingText);
     }
+
 
     private string GetBindingDisplayName(List<InputAction> actions, string scheme)
     {
-        string actionresult= null;
-        foreach(var action in actions)
+        string actionresult= "";
+        foreach (var action in actions)
         {
-            foreach(var binding in action.bindings)
+            foreach (var binding in action.bindings)
             {
                 // Split groups safely (they might be "Keyboard&Mouse;Gamepad")
                 var groups = (binding.groups ?? "").Split(';');
@@ -86,16 +95,17 @@ public class TutorialMessageDisplayer : MonoBehaviour
                 {
                     if (group.Trim().Equals(scheme, System.StringComparison.OrdinalIgnoreCase))
                     {
-                        actionresult = "Press " + InputControlPath.ToHumanReadableString(
+                        actionresult = actionresult + " Press [" + InputControlPath.ToHumanReadableString(
                            binding.effectivePath,
                            InputControlPath.HumanReadableStringOptions.OmitDevice
-                       ) + "to " + action.name;
+                       ) + "] to " + action.name + ".";
                     }
                 }
             }
         }
 
-        string trueResult = (actionresult == null) ? actionresult : "???";
+        Debug.Log($"actionresult is :{actionresult} ");
+        string trueResult = (actionresult == "") ? "???" : actionresult;
         return trueResult;
     }
 
@@ -107,4 +117,4 @@ public class TutorialMessageDisplayer : MonoBehaviour
 // url: https://chatgpt.com/c/68fcd4e7-be48-8330-93df-4b9ea779dc91
 // date accessed: 2025/10/25
 
-// I really struggled conceptualizing how the new input system works with binding. So chatgpt explained how I could get an individual binding from the active device
+// I really struggled conceptualizing how the new input system works with binding. So chatgpt explained how I could get an individual binding from the active device from the binding groups
