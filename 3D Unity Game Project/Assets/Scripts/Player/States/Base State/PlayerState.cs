@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerState
@@ -18,7 +19,7 @@ public class PlayerState
     public virtual void PhysicsUpdate() { }
     public virtual void AnimationTriggerEvent() { }
 
-    
+    public event Action<AnimationData> OnAnimationTrigger;
 
 
 }

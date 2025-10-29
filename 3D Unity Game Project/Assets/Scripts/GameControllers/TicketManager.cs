@@ -49,7 +49,6 @@ public class TicketManager : MonoBehaviour
             {
                 IGame game = (IGame)obj;
                 gamesList.Add(game);
-
             }
         }
     }
@@ -79,6 +78,8 @@ public class TicketManager : MonoBehaviour
         //Invoke event on available games and notify the miniGameManager
         OnAvailableGames.Invoke(new List<IGame>(availableGames));
     }
+
+    
 }
 
 //Code references:
