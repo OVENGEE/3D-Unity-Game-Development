@@ -75,6 +75,7 @@ public class PanelController : MonoBehaviour
         Quit.performed += ActiveInputPanelManager;
         Menu.performed += ActiveInputPanelManager;
         TutorialID.OnTutorialTrigger += SetActivePanel;
+        NPC.onDialogueTrigger += SetActivePanel;
     }
 
 
@@ -84,6 +85,7 @@ public class PanelController : MonoBehaviour
         Quit.performed -= ActiveInputPanelManager;
         Menu.performed -= ActiveInputPanelManager;
         TutorialID.OnTutorialTrigger -= SetActivePanel;
+        NPC.onDialogueTrigger -= SetActivePanel;
         
         //Input Actions disabling
         Quit?.Disable();
@@ -212,7 +214,8 @@ public enum PanelType
     Quit,
     DuckShootingGame,
     BasketBallGame,
-    UnAvailableGame
+    UnAvailableGame,
+    Dialogue
 }
 
 [System.Serializable]

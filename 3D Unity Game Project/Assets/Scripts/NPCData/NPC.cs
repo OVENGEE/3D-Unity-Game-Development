@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -13,8 +14,13 @@ public class NPC : MonoBehaviour, IInteractable
     public TMP_Text nameText;
     public Image portraitImage;
 
+    //Event declarations
+
     [Header("Interaction Event")]
     [SerializeField] private UnityEvent _onInteract;
+
+    public static event Action<PanelType> onDialogueTrigger;
+
     UnityEvent IInteractable.onInteract
     {
         get => _onInteract;
@@ -61,6 +67,8 @@ public class NPC : MonoBehaviour, IInteractable
         //Cursor visibility
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+
+        onDialogueTrigger?.Invoke(PanelType.Dialogue);
 
         if (dialogueData == null || dialogueData.dialogueLines.Length == 0) return;
 
@@ -123,7 +131,7 @@ public class NPC : MonoBehaviour, IInteractable
         StopAllCoroutines();
         isDialogueActive = false;
         if (dialogueText != null) dialogueText.SetText("");
-        if (dialoguePanel != null) dialoguePanel.SetActive(false);
+        //if (dialoguePanel != null) dialoguePanel.SetActive(false);
 
         //Cursor lock and make invisible
         Cursor.visible = false;
