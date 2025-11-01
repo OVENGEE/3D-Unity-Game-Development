@@ -1,20 +1,26 @@
-    using Unity.VisualScripting;
-    using UnityEditor;
-    using UnityEngine;
-    using UnityEngine.InputSystem;
+using System;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
-    public class PlayerShootState : PlayerWalkState,ITriggerHandler
-    {
-        //Shoot references
-        private float firetimer;
-        private float range;
-        private Camera camera;
-        Ray debugray;
-        bool shoot;
+public class PlayerShootState : PlayerWalkState,ITriggerHandler
+{
+    //Shoot references
+    private float firetimer;
+    private float range;
+    private Camera camera;
+    Ray debugray;
+    bool shoot;
+    int score;
 
-        //Input actions
-        InputAction shootAction;
-        InputAction sprintAction;
+    //Input actions
+    InputAction shootAction;
+    InputAction sprintAction;
+
+    //Events
+    public static event Action<int> OnTargetShot;
+    public static event Action<PanelType> OnShootPanelTrigger;
+    public static event Action OnShootPanelReset;
 
         public PlayerShootState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
         {
@@ -26,9 +32,11 @@
             range = 20f;
             camera = base.player.camera;
 
+            score = 0;
             Player.PlayerState currentState = base.player.playerState;
             currentState = Player.PlayerState.Shoot;
             base.player.UpdateState(currentState);
+            OnShootPanelTrigger?.Invoke(PanelType.DuckShootingGame);
 
             if (shootAction == null)
             {
@@ -45,30 +53,30 @@
             sprintAction.performed += OnSprintActivated;
         }
 
-        public override void ExitState()
-        {
+    public override void ExitState()
+    {
             base.ExitState();
 
             //Event unSubscriptions
             shootAction.performed -= OnshootFunction;
             sprintAction.performed -= OnSprintActivated;
-        }
+    }
 
-        public override void PhysicsUpdate()
-        {
+    public override void PhysicsUpdate()
+    {
             base.PhysicsUpdate();
-        }
+    }
 
-        public override void FrameUpdate()
-        {
+    public override void FrameUpdate()
+    {
             base.FrameUpdate();
             firetimer -= Time.deltaTime;
-        }
+    }
 
-        public override void AnimationTriggerEvent()
-        {
+    public override void AnimationTriggerEvent()
+    {
             base.AnimationTriggerEvent();
-        }
+    }
 
     void OnshootFunction(InputAction.CallbackContext context)
     {
@@ -83,6 +91,8 @@
 
             if (hit.collider.TryGetComponent<Target>(out Target target))
             {
+                score++;
+                OnTargetShot?.Invoke(score);
                 Debug.Log($"{hit.collider.name} has been hit!");
                 target.PlayAfterShotRoutine();
             }
@@ -98,6 +108,7 @@
     {
         //Switch to the walking state!
         base.player.tempGun.SetActive(false);
+        OnShootPanelReset?.Invoke();
         playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
     }
     public void OnTriggerExit(Collider other)

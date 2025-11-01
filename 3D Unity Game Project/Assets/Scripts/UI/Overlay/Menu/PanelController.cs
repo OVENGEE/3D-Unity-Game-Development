@@ -76,6 +76,8 @@ public class PanelController : MonoBehaviour
         Menu.performed += ActiveInputPanelManager;
         TutorialID.OnTutorialTrigger += SetActivePanel;
         NPC.onDialogueTrigger += SetActivePanel;
+        PlayerShootState.OnShootPanelTrigger += SetActivePanel;
+        PlayerShootState.OnShootPanelReset += ResetToHUDPanel;
     }
 
 
@@ -86,6 +88,8 @@ public class PanelController : MonoBehaviour
         Menu.performed -= ActiveInputPanelManager;
         TutorialID.OnTutorialTrigger -= SetActivePanel;
         NPC.onDialogueTrigger -= SetActivePanel;
+        PlayerShootState.OnShootPanelTrigger -= SetActivePanel;
+        PlayerShootState.OnShootPanelReset -= ResetToHUDPanel;
         
         //Input Actions disabling
         Quit?.Disable();
@@ -96,6 +100,7 @@ public class PanelController : MonoBehaviour
 
     private void ActiveInputPanelManager(InputAction.CallbackContext context)
     {
+        //Add memory to changing the panel so it remembers the panel it was before input Action
         if (!context.performed) return;
         string uiInputCall = context.action.name;
 
@@ -163,11 +168,15 @@ public class PanelController : MonoBehaviour
         UpdateVisibilityState();
 
         //Disable player input
-        OnEnablePlayerInput?.Invoke(false);
+        if (targetPanel == PanelType.Tutorial | targetPanel == PanelType.Dialogue | targetPanel == PanelType.Menu | targetPanel == PanelType.Quit)
+        {
+            OnEnablePlayerInput?.Invoke(false);
 
-        //Cursor unlock and make visible
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+            //Cursor unlock and make visible
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+
     }
 
     private void UpdateVisibilityState()
