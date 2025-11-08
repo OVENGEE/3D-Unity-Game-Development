@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PickUpObject : MonoBehaviour,IHoldable
+public class PickUpObject : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
@@ -21,7 +21,6 @@ public class PickUpObject : MonoBehaviour,IHoldable
         transform.localPosition = Vector3.zero;
 
         this.GetComponent<Collider>().enabled = false;
-        Equip();
     }
 
     public void Drop()
@@ -29,7 +28,7 @@ public class PickUpObject : MonoBehaviour,IHoldable
         rb.useGravity = true;
         transform.SetParent(null);
         this.GetComponent<Collider>().enabled = true;
-        UnEquip();
+
     }
 
     public void Throw(Vector3 impulse)
@@ -47,13 +46,5 @@ public class PickUpObject : MonoBehaviour,IHoldable
         rb.MovePosition(targetPosition);
     }
 
-    public void Equip()
-    {
-        Debug.Log("BasketBall equipped!");
-    }
 
-    public void UnEquip()
-    {
-        Debug.Log("BasketBall unequipped");
-    }
 }

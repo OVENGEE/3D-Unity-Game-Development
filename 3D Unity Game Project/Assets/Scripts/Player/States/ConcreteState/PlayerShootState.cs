@@ -22,6 +22,9 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
     public static event Action<PanelType> OnShootPanelTrigger;
     public static event Action OnShootPanelReset;
 
+    //Particle System
+    private ParticleSystem gunflash;    
+
         public PlayerShootState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
         {
         }
@@ -34,6 +37,9 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
 
             score = 0;
             Player.PlayerState currentState = base.player.playerState;
+            gunflash = base.player.Gun?.GetComponentInChildren<ParticleSystem>();
+
+        
             currentState = Player.PlayerState.Shoot;
             base.player.UpdateState(currentState);
             OnShootPanelTrigger?.Invoke(PanelType.DuckShootingGame);
@@ -84,8 +90,7 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
         Ray ray = new Ray(camera.transform.position, camera.transform.forward);
 
         //Play animation and particle effect
-        base.player.muzzleflash.Play();
-
+        gunflash.Play();
         if (Physics.Raycast(ray, out hit, range))
         {
 
@@ -93,6 +98,7 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
             {
                 score++;
                 OnTargetShot?.Invoke(score);
+                
                 Debug.Log($"{hit.collider.name} has been hit!");
                 target.PlayAfterShotRoutine();
             }
@@ -107,7 +113,7 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
     private void OnExitShootState()
     {
         //Switch to the walking state!
-        base.player.tempGun.SetActive(false);
+        base.player.Gun.SetActive(false);
         OnShootPanelReset?.Invoke();
         playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
     }
@@ -123,7 +129,8 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
     void OnSprintActivated(InputAction.CallbackContext context)
     {
         //Switch to the sprint state!
-        base.player.tempGun.SetActive(false);
+        base.player.Gun.transform.SetParent(null);
+        base.player.Gun.SetActive(false);
         playerStateMachine.SwitchState(new PlayerSprintState(player, playerStateMachine));
     }
 }

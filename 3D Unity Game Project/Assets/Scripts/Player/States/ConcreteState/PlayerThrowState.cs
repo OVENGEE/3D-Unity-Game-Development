@@ -3,12 +3,28 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerThrowState : PlayerWalkState,ITriggerHandler
+public class PlayerThrowState : PlayerState,ITriggerHandler
 {
     //Input Action Declaration
     InputAction aimAction;
     InputAction pickUpAction;
     InputAction throwAction;
+    InputAction crouchAction;
+    InputAction sprintAction;
+    InputAction moveAction;
+
+    //Vector
+    private Vector2 moveDirectionInput;
+    private Vector3 velocity;
+    private Vector3 move;
+
+    //Controller
+    private CharacterController controller;
+
+    //Constants
+    const float GRAVITY = -9.81f;
+
+
 
     //Pick Up variables
     private float PickUpRange;
@@ -37,6 +53,7 @@ public class PlayerThrowState : PlayerWalkState,ITriggerHandler
     public override void EnterState()
     {
         base.EnterState();
+        controller = base.player.GetComponent<CharacterController>();
 
         Player.PlayerState currentState = base.player.playerState;
         currentState = Player.PlayerState.Throw;
@@ -59,15 +76,20 @@ public class PlayerThrowState : PlayerWalkState,ITriggerHandler
         //Event Subscriptions
         throwAction.performed += OnThrow;
         pickUpAction.performed += OnPickUp;
+        sprintAction.performed += OnExitThrowStateToSprint;
+        crouchAction.performed += OnExitThrowStateToCrouch;
     }
 
     public override void ExitState()
     {
         base.ExitState();
+        heldObject?.Drop();
 
         //Event unsubscriptions
         throwAction.performed -= OnThrow;
         pickUpAction.performed -= OnPickUp;
+        sprintAction.performed -= OnExitThrowStateToSprint;
+        crouchAction.performed -= OnExitThrowStateToCrouch;
     }
 
     public void OnTriggerExit(Collider other)
@@ -82,25 +104,41 @@ public class PlayerThrowState : PlayerWalkState,ITriggerHandler
     private void InputActionAssignment()
     {
         //Assigning all Input actions of the state
-        if (pickUpAction == null)
-        {
-            pickUpAction = base.player.inputs?.Player.PickUp;
-        }
+        aimAction = base.player.inputs?.Player.Aim;
+        pickUpAction = base.player.inputs?.Player.PickUp;
+        throwAction = base.player.inputs?.Player.Throw;
+        sprintAction = base.player.inputs?.Player.Sprint;
+        crouchAction = base.player.inputs?.Player.Crouch;
+        moveAction = base.player.inputs?.Player.Move;
 
-        if (throwAction == null)
-        {
-            throwAction = base.player.inputs?.Player.Throw;
-        }
+    }
 
-        if (aimAction == null)
-        {
-            aimAction = base.player.inputs?.Player.Aim;
-        }
+    void HandleMovement()
+    {
+        //Motion calculation
+        move = base.player.transform.right * moveDirectionInput.x + base.player.transform.forward * moveDirectionInput.y;
+        float moveSpeed = base.player.MoveSpeed;
+
+        //Apply motion to controller
+        controller.Move(move * moveSpeed * Time.deltaTime);
+
+        //Ground check for controller
+        if (controller.isGrounded && velocity.y < 0) velocity.y = -2f;
+
+        velocity.y += GRAVITY * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
+
+    }
+    public override void FrameUpdate()
+    {
+        base.FrameUpdate();
+        moveDirectionInput = moveAction.ReadValue<Vector2>();
     }
 
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        HandleMovement();
         if (heldObject != null)
         {
             heldObject.MoveToHoldPoint(holdPoint.position);
@@ -191,4 +229,15 @@ public class PlayerThrowState : PlayerWalkState,ITriggerHandler
 
         lineRenderer.enabled = false; // Hide the trajectory line immediately after throw
     }
+
+    public void OnExitThrowStateToSprint(InputAction.CallbackContext context)
+    {
+        playerStateMachine.SwitchState(new PlayerSprintState(player, playerStateMachine));
+    }
+
+        public void OnExitThrowStateToCrouch(InputAction.CallbackContext context)
+    {
+        playerStateMachine.SwitchState(new PlayerCrouchState(player, playerStateMachine));
+    }
+
 }

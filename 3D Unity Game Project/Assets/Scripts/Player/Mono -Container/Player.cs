@@ -90,7 +90,7 @@ public class Player : MonoBehaviour
 
     [Header("Gun Settings")]
 
-    public GameObject tempGun;
+    public GameObject Gun;
     public ParticleSystem muzzleflash;
 
     void Awake()
@@ -137,7 +137,9 @@ public class Player : MonoBehaviour
     {
         InteractSlider.SetActive(false);
         StateMachine.SwitchState(ShootState);
-        tempGun.SetActive(true);
+        Gun.transform.SetParent(holdPoint);
+        Gun.transform.position = holdPoint.position + new Vector3(0f,0f,-0.2f);
+        Gun.SetActive(true);
     }
 
     public void SwitchToThrowState()
@@ -221,7 +223,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if (tempGun == null)
+        if (Gun == null)
         {
             Debug.Log("the tempGun is not assigned to the Player inspector!");
             return;
