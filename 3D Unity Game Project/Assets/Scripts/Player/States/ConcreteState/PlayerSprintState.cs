@@ -13,7 +13,7 @@ public class PlayerSprintState : PlayerWalkState
     float staminaTimer, MaxStamina, ChargeRate, staminaVal;
 
     //FOV variables
-    float sprintFOV = 90f;
+    float sprintFOV = 78f;
 
 
     //Events 

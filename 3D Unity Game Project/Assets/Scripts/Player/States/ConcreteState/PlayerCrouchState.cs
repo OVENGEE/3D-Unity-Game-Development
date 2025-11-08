@@ -42,7 +42,7 @@ public class PlayerCrouchState : PlayerWalkState
     public override void ExitState()
     {
         base.ExitState();
-        base.controller.height = 2f; //Return back to standing height
+        base.controller.height = 3.1f; //Return back to standing height
         base.FOVTransition(60f); //return to base FOV
         //Events unsubscriptions
         crouch.canceled -= OnUnCrouch;
