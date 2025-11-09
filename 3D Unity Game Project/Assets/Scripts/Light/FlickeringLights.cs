@@ -42,3 +42,8 @@ public class FlickeringLights : MonoBehaviour
         (minIntensity, maxIntensity) = (maxIntensity, minIntensity);
     }
 }
+
+// 1)Title: How To Create Flickering Light in Unity (Tutorial 2025)
+//  Author: JD Decv
+//  Date accessed:  09/11/2025
+//  Availability: https://www.youtube.com/watch?v=4Q4BFykWOPY
