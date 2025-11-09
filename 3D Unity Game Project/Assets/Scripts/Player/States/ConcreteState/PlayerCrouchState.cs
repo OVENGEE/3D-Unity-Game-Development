@@ -11,7 +11,7 @@ public class PlayerCrouchState : PlayerWalkState
 
 
     //Crouch variables
-    float crouchFOV = 15f;
+    float crouchFOV = 50f;
 
     public PlayerCrouchState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {

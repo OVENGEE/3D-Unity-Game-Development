@@ -16,6 +16,16 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
     //Input actions
     InputAction shootAction;
     InputAction sprintAction;
+    
+    //Animation
+    private AnimationData holdGunAnimation = new AnimationData
+    {
+        type = AnimationType.HoldGun,
+        layer = 1,
+        fadeDuration = 0.25f,
+        targetWeight = .7f,
+        useTrigger = false
+    };
 
     //Events
     public static event Action<int> OnTargetShot;
@@ -37,8 +47,11 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
 
             score = 0;
             Player.PlayerState currentState = base.player.playerState;
-            gunflash = base.player.Gun?.GetComponentInChildren<ParticleSystem>();
+        gunflash = base.player.Gun?.GetComponentInChildren<ParticleSystem>();
 
+            
+            //Animation
+            animationManager.PlayAnimation(holdGunAnimation);
         
             currentState = Player.PlayerState.Shoot;
             base.player.UpdateState(currentState);
@@ -61,7 +74,9 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
 
     public override void ExitState()
     {
-            base.ExitState();
+        base.ExitState();
+        base.player.Gun.transform.SetParent(null);
+        base.player.Gun.SetActive(false);
 
             //Event unSubscriptions
             shootAction.performed -= OnshootFunction;
@@ -70,7 +85,13 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
 
     public override void PhysicsUpdate()
     {
-            base.PhysicsUpdate();
+        move = base.player.transform.right * moveDirectionInput.x + base.player.transform.forward * moveDirectionInput.y;
+        if (controller.isGrounded && move.y < 0) move.y = -2f;
+
+        move.y += (1.5f*GRAVITY) * Time.deltaTime;
+
+        base.controller.Move(move * base.player.MoveSpeed * Time.deltaTime);
+
     }
 
     public override void FrameUpdate()
@@ -113,7 +134,7 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
     private void OnExitShootState()
     {
         //Switch to the walking state!
-        base.player.Gun.SetActive(false);
+        //base.player.Gun.SetActive(false);
         OnShootPanelReset?.Invoke();
         playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
     }
@@ -129,8 +150,6 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
     void OnSprintActivated(InputAction.CallbackContext context)
     {
         //Switch to the sprint state!
-        base.player.Gun.transform.SetParent(null);
-        base.player.Gun.SetActive(false);
         playerStateMachine.SwitchState(new PlayerSprintState(player, playerStateMachine));
     }
 }

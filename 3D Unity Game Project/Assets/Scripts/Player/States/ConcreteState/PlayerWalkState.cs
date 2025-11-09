@@ -7,8 +7,29 @@ using UnityEngine.UI;
 public class PlayerWalkState : PlayerState
 {
     //Constants
-    const float GRAVITY = -9.81f;
-    const float JUMPHEIGHT = 2f;
+    protected const float GRAVITY = -9.81f;
+    protected const float JUMPHEIGHT = 2f;
+
+    //Animation
+    protected AnimationManager animationManager;
+    private AnimationType lastPlayed;
+    private AnimationData walkAnimation = new AnimationData
+    {
+        type = AnimationType.Walk,
+        layer = 0,
+        fadeDuration = 0.15f,
+        targetWeight = 1f,
+        useTrigger = false
+    };
+
+    private AnimationData idleAnimation = new AnimationData
+    {
+        type = AnimationType.Idle,
+        layer = 0,
+        fadeDuration = 0.15f,
+        targetWeight = 1f,
+        useTrigger = false
+    };
 
     //Input
     InputAction moveAction;
@@ -17,8 +38,8 @@ public class PlayerWalkState : PlayerState
     InputAction jumpAction;
 
     //Vectors
-    private Vector2 moveDirectionInput;
-    private Vector3 velocity;
+    protected Vector2 moveDirectionInput;
+    protected Vector3 velocity;
     protected Vector3 move;
     protected CharacterController controller;
 
@@ -33,11 +54,15 @@ public class PlayerWalkState : PlayerState
     public override void EnterState()
     {
         base.EnterState();
+        animationManager = base.player.animationManager;
         controller = base.player.GetComponent<CharacterController>();
         Player.PlayerState currentState = base.player.playerState;
         currentState = Player.PlayerState.Walk;
         base.player.UpdateState(currentState);
         NullChecks();
+
+        //animation
+        animationManager.PlayAnimation(idleAnimation);
 
 
         //Event Subscriptions
@@ -86,6 +111,19 @@ public class PlayerWalkState : PlayerState
 
         velocity.y += GRAVITY * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+
+        bool isMoving = move.sqrMagnitude > 0.01f;
+
+        if (isMoving && lastPlayed != AnimationType.Walk)
+        {
+            animationManager.PlayAnimation(walkAnimation);
+            lastPlayed = AnimationType.Walk;
+        }
+        else if (!isMoving && lastPlayed != AnimationType.Idle)
+        {
+            animationManager.PlayAnimation(idleAnimation);
+            lastPlayed = AnimationType.Idle;
+        }
 
     }
 
