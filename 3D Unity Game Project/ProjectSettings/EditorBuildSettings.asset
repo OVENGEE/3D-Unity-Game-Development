@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: b97763d472ac29248be5c00d9a4de05b
   - enabled: 1
-    path: Assets/Scenes/Greyboxing.unity
+    path: Assets/Scenes/GreyboxingA.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 877ab1555a705ec429d6306aec57d5d4, type: 2}
