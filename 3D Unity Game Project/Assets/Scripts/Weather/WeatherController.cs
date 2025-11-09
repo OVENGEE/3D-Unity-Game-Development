@@ -1,21 +1,28 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class WeatherController : MonoBehaviour
 {
-    
+
     Light celestialLight;
     MiniGameManager gameManager;
+
+    [SerializeField] TimePhase[] timePhases;
+    private Dictionary<SunPhase, TimePhase> timePhaseMap;
+    private SunPhase currentPhase;
+
     void Awake()
     {
         celestialLight = GetComponentInChildren<Light>();
         gameManager = FindAnyObjectByType<MiniGameManager>(FindObjectsInactive.Include);
-    }
-    enum SunPhase
-    {
-        SunRise = 45,
-        Noon = 90,
-        Evening = 300,
-        Night 
+        currentPhase = SunPhase.None;
+
+        timePhaseMap = new Dictionary<SunPhase, TimePhase>();
+        foreach (var timePhase in timePhases)
+        {
+            if (!timePhaseMap.ContainsKey(timePhase.sunType))
+                timePhaseMap.Add(timePhase.sunType, timePhase);
+        }
     }
 
 
@@ -27,9 +34,28 @@ public class WeatherController : MonoBehaviour
 
     void OnDisable()
     {
-        
+
     }
 
+
+
+}
+
+
+[System.Serializable]
+public struct TimePhase
+{
+    public SunPhase sunType;
+    public Gradient AmbientColour;
+    public Gradient DirectionalColour;
+    public Gradient FogColour;
+}
+
+public enum SunPhase
+{
+    None,
+    SunSet,
+    Night
 }
 
 

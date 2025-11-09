@@ -85,7 +85,14 @@ public enum AnimationType
 }
 
 // Code references:
-// 1)Title: Scalable animation manager
+
+// Code references:
+// 1)Title: Easily Combine Animations in Unity | Animation Layers Explained
+//  Author: Ketra Games
+//  Date accessed:  09/11/2025
+//  Availability: https://www.youtube.com/watch?v=pW6U_6i4l6o
+
+// 2)Title: Scalable animation manager
 //  Author: Chatgpt
 //  Date accessed:  09/11/2025
 //  Availability: https://chatgpt.com/c/690211cc-42fc-832a-8f37-f47fd4e44749
