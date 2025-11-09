@@ -16,7 +16,7 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
     //Input actions
     InputAction shootAction;
     InputAction sprintAction;
-    
+
     //Animation
     private AnimationData holdGunAnimation = new AnimationData
     {
@@ -24,6 +24,15 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
         layer = 1,
         fadeDuration = 0.25f,
         targetWeight = .7f,
+        useTrigger = false
+    };
+    
+    private AnimationData restholdGunAnimation = new AnimationData
+    {
+        type = AnimationType.HoldGun,
+        layer = 1,
+        fadeDuration = 0.25f,
+        targetWeight = 0f,
         useTrigger = false
     };
 
@@ -77,20 +86,23 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
         base.ExitState();
         base.player.Gun.transform.SetParent(null);
         base.player.Gun.SetActive(false);
+        animationManager.PlayAnimation(restholdGunAnimation);
 
-            //Event unSubscriptions
-            shootAction.performed -= OnshootFunction;
-            sprintAction.performed -= OnSprintActivated;
+        //Event unSubscriptions
+        shootAction.performed -= OnshootFunction;
+        sprintAction.performed -= OnSprintActivated;
     }
 
     public override void PhysicsUpdate()
     {
-        move = base.player.transform.right * moveDirectionInput.x + base.player.transform.forward * moveDirectionInput.y;
-        if (controller.isGrounded && move.y < 0) move.y = -2f;
+        base.PhysicsUpdate();
 
-        move.y += (1.5f*GRAVITY) * Time.deltaTime;
+        // move = base.player.transform.right * moveDirectionInput.x + base.player.transform.forward * moveDirectionInput.y;
+        // if (controller.isGrounded && move.y < 0) move.y = -2f;
 
-        base.controller.Move(move * base.player.MoveSpeed * Time.deltaTime);
+        // move.y += (1.5f*GRAVITY) * Time.deltaTime;
+
+        // base.controller.Move(move * base.player.MoveSpeed * Time.deltaTime);
 
     }
 

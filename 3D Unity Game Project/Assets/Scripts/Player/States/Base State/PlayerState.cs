@@ -5,6 +5,7 @@ public class PlayerState
 {
     protected Player player;
     protected PlayerStateMachine playerStateMachine;
+     protected AnimationManager animationManager;
 
     public PlayerState(Player player, PlayerStateMachine playerStateMachine)
     {
@@ -19,7 +20,6 @@ public class PlayerState
     public virtual void PhysicsUpdate() { }
     public virtual void AnimationTriggerEvent() { }
 
-    public event Action<AnimationData> OnAnimationTrigger;
 
 
 }

@@ -4,7 +4,7 @@ using UnityEngine.InputSystem.Controls;
 
 public class AnimationManager : MonoBehaviour
 {
-    [SerializeField] Animator animator;
+    public Animator animator;
 
 
     void Awake()
@@ -54,6 +54,7 @@ public class AnimationManager : MonoBehaviour
             case AnimationType.Run: return "Run";
             case AnimationType.HoldBall: return "HoldBall";
             case AnimationType.HoldGun: return "HoldGun";
+            case AnimationType.Throw: return "Throw";
             default: return "";
         }
     }
@@ -78,7 +79,8 @@ public enum AnimationType
     Walk,
     Run,
     HoldBall,
-    HoldGun
+    HoldGun,
+    Throw
 
 }
 

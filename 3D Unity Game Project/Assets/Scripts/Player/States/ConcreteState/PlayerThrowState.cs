@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -24,7 +25,46 @@ public class PlayerThrowState : PlayerState,ITriggerHandler
     //Constants
     const float GRAVITY = -9.81f;
 
+    //Animation:
+    private AnimationManager animationManager;
+    private Animator animator;
+    private AnimationType lastPlayed;
+    private AnimationData holdAnimation = new AnimationData
+    {
+        type = AnimationType.HoldGun,
+        layer = 1,
+        fadeDuration = 0.25f,
+        targetWeight = .7f,
+        useTrigger = false
+    };
 
+    private AnimationData UndoHoldAnimation = new AnimationData
+    {
+        type = AnimationType.HoldGun,
+        layer = 1,
+        fadeDuration = 0.25f,
+        targetWeight = 0f,
+        useTrigger = false
+    };
+    
+
+    private AnimationData walkAnimation = new AnimationData
+    {
+        type = AnimationType.Walk,
+        layer = 0,
+        fadeDuration = 0.15f,
+        targetWeight = 1f,
+        useTrigger = false
+    };
+
+    private AnimationData idleAnimation = new AnimationData
+    {
+        type = AnimationType.Idle,
+        layer = 0,
+        fadeDuration = 0.15f,
+        targetWeight = 1f,
+        useTrigger = false
+    };
 
     //Pick Up variables
     private float PickUpRange;
@@ -45,6 +85,7 @@ public class PlayerThrowState : PlayerState,ITriggerHandler
 
     //Line renderer
     private LineRenderer lineRenderer;
+    
 
     public PlayerThrowState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
@@ -53,6 +94,9 @@ public class PlayerThrowState : PlayerState,ITriggerHandler
     public override void EnterState()
     {
         base.EnterState();
+        animationManager = base.player.animationManager;
+        animationManager.PlayAnimation(holdAnimation);
+        animator = animationManager.animator;
         controller = base.player.GetComponent<CharacterController>();
 
         Player.PlayerState currentState = base.player.playerState;
@@ -83,6 +127,7 @@ public class PlayerThrowState : PlayerState,ITriggerHandler
     public override void ExitState()
     {
         base.ExitState();
+        animationManager.PlayAnimation(UndoHoldAnimation);
         heldObject?.Drop();
 
         //Event unsubscriptions
@@ -127,12 +172,25 @@ public class PlayerThrowState : PlayerState,ITriggerHandler
 
         velocity.y += GRAVITY * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+        bool isMoving = move.sqrMagnitude > 0.01f;
+
+        if (isMoving && lastPlayed != AnimationType.Walk)
+        {
+            animationManager.PlayAnimation(walkAnimation);
+            lastPlayed = AnimationType.Walk;
+        }
+        else if (!isMoving && lastPlayed != AnimationType.Idle)
+        {
+            animationManager.PlayAnimation(idleAnimation);
+            lastPlayed = AnimationType.Idle;
+        }
 
     }
     public override void FrameUpdate()
     {
         base.FrameUpdate();
         moveDirectionInput = moveAction.ReadValue<Vector2>();
+  
     }
 
     public override void PhysicsUpdate()
@@ -221,6 +279,8 @@ public class PlayerThrowState : PlayerState,ITriggerHandler
         if (!context.performed) return;
         if (heldObject == null) return;
 
+
+
         Vector3 dir = camera.transform.forward;
         Vector3 impulse = dir * throwForce + Vector3.up * throwUpwardBoost;
 
@@ -228,6 +288,7 @@ public class PlayerThrowState : PlayerState,ITriggerHandler
         heldObject = null;
 
         lineRenderer.enabled = false; // Hide the trajectory line immediately after throw
+
     }
 
     public void OnExitThrowStateToSprint(InputAction.CallbackContext context)
@@ -235,9 +296,10 @@ public class PlayerThrowState : PlayerState,ITriggerHandler
         playerStateMachine.SwitchState(new PlayerSprintState(player, playerStateMachine));
     }
 
-        public void OnExitThrowStateToCrouch(InputAction.CallbackContext context)
+    public void OnExitThrowStateToCrouch(InputAction.CallbackContext context)
     {
         playerStateMachine.SwitchState(new PlayerCrouchState(player, playerStateMachine));
     }
+    
 
 }
