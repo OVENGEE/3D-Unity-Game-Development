@@ -8,7 +8,7 @@ using UnityEngine;
 public class MiniGameManager : MonoBehaviour
 {
     //Event declaration
-    public event Action onAnyGameCompleted;
+    public static event  Action onAnyGameCompleted;
     private event Action<List<GameObject>> OnSetAvailableGame;
     private List<GameObject> miniGameObjects;
     private List<IGame> availableGames;
@@ -51,7 +51,9 @@ public class MiniGameManager : MonoBehaviour
 
     private void HandleMiniGame()
     {
+        onAnyGameCompleted?.Invoke();
         StartCoroutine(ConfettiRoutine());
+        SoundEffectManager.Play("Win");
     }
 
     private void AvailableGameRegistry(List<IGame> games)

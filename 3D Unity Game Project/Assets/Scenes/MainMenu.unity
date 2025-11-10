@@ -843,7 +843,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 50fd84e47d9ea1d4d9d7979b450c1539, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d5ace6fed69f78e45beff9fcf348cf71, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2516,7 +2516,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Greyboxing
+          m_StringArgument: Final Scene
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &876575765
@@ -4634,7 +4634,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1101629773}
+      - m_Target: {fileID: 1685493894}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -7492,8 +7492,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: d5ace6fed69f78e45beff9fcf348cf71, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -7562,7 +7562,7 @@ MonoBehaviour:
   senSlider: {fileID: 575711572}
   defaultSen: 50
   mainSensitivity: 50
-  _newGameLevel: Greyboxing
+  _newGameLevel: Final Scene
   noSavedGameDialog: {fileID: 0}
 --- !u!1 &2093895045
 GameObject:

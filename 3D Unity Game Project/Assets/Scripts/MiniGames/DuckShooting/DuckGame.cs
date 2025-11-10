@@ -6,7 +6,6 @@ public class DuckGame : MonoBehaviour, IGame,IGameCompleted
     [Header("Game data")]
     [SerializeField] BaseGame gameinfo;
 
-
     public int RequiredTickets { get; set; }
     public string GameName { get; set; }
     public bool isUnlocked { get; set; }

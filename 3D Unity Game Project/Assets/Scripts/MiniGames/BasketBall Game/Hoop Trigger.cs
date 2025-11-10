@@ -12,6 +12,7 @@ public class HoopTrigger : MonoBehaviour
             score++;
             OnHoopScored?.Invoke(score);
             Debug.Log($"Basket Scored! Score is {score} ");
+            SoundEffectManager.Play("Goal");
         }
     }
 }

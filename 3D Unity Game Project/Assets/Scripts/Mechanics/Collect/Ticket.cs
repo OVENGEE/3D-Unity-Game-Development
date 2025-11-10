@@ -7,7 +7,7 @@ public class Ticket : MonoBehaviour, IItem
     public void Collect()
     {
         OnTicketCollect.Invoke(worth); // Invoke the event with the gem's worth
-        
+        SoundEffectManager.Play("Coin");
         Destroy(gameObject); // Destroy the gem GameObject when collected
     }
 }

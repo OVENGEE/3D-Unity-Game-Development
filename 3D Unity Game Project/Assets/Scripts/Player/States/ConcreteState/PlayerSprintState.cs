@@ -44,7 +44,7 @@ public class PlayerSprintState : PlayerWalkState
 
 
         animationManager.PlayAnimation(sprintAnimation);
-
+        // SoundEffectManager.Play("Run");
 
         //Assigning from monobehaviour class
         MaxStamina = base.player.MaxStamina;

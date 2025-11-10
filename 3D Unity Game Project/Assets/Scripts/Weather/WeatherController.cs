@@ -64,12 +64,12 @@ public class WeatherController : MonoBehaviour
 
     void OnEnable()
     {
-        LightTrigger.OnLightTrigger += UpdatePhase;
+        MiniGameManager.onAnyGameCompleted += UpdatePhase;
     }
 
     void OnDisable()
     {
-        LightTrigger.OnLightTrigger -= UpdatePhase;
+        MiniGameManager.onAnyGameCompleted -= UpdatePhase;
     }
 
     private void UpdatePhase()

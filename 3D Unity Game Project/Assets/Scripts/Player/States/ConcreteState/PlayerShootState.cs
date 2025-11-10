@@ -23,7 +23,7 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
         type = AnimationType.HoldGun,
         layer = 1,
         fadeDuration = 0.25f,
-        targetWeight = .7f,
+        targetWeight = .85f,
         useTrigger = false
     };
     
@@ -124,6 +124,7 @@ public class PlayerShootState : PlayerWalkState,ITriggerHandler
 
         //Play animation and particle effect
         gunflash.Play();
+        SoundEffectManager.Play("Shoot");
         if (Physics.Raycast(ray, out hit, range))
         {
 

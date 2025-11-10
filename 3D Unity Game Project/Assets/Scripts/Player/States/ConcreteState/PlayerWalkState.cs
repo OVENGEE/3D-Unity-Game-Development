@@ -46,6 +46,10 @@ public class PlayerWalkState : PlayerState
     // Player references
     protected Slider slider;
 
+    //Events
+    public static event Action<bool> OnWalkSound;
+
+
 
 
     public PlayerWalkState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
@@ -117,15 +121,19 @@ public class PlayerWalkState : PlayerState
         if (isMoving && lastPlayed != AnimationType.Walk)
         {
             animationManager.PlayAnimation(walkAnimation);
+            OnWalkSound?.Invoke(true);
             lastPlayed = AnimationType.Walk;
         }
         else if (!isMoving && lastPlayed != AnimationType.Idle)
         {
             animationManager.PlayAnimation(idleAnimation);
+            OnWalkSound?.Invoke(false);
             lastPlayed = AnimationType.Idle;
         }
 
     }
+
+
 
     public void HandleJump()
     {

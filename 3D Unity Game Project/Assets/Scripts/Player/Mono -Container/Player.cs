@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     //Movement Settings
     [Header("Movement Settings")]
     public float MoveSpeed = 5f;
-
+    public float footstepSpeed = 0.5f;
 
     //State Information
     [Header("State Data")]
@@ -121,6 +121,7 @@ public class Player : MonoBehaviour
         //Enable input and subscribe events
         inputs.Enable();
         PanelController.OnEnablePlayerInput += EnablePlayerInput;
+        PlayerWalkState.OnWalkSound += FootStepSound;
     }
 
     void Update()
@@ -138,6 +139,7 @@ public class Player : MonoBehaviour
         //Unsubscribe the events and disable input
         inputs.Disable();
         PanelController.OnEnablePlayerInput -= EnablePlayerInput;
+        PlayerWalkState.OnWalkSound -= FootStepSound;
     }
 
     public void SwitchToShootState()
@@ -158,6 +160,23 @@ public class Player : MonoBehaviour
     {
         sprintCooldownTimer = sprintCooldown;
         canSprint = false;
+    }
+
+    void FootStepSound(bool FootSteps)
+    {
+        if (FootSteps)
+        {
+            InvokeRepeating(nameof(PlayFootStep), 0f, footstepSpeed);
+        }
+        else
+        {
+            CancelInvoke(nameof(PlayFootStep));
+        }
+    }
+
+    void PlayFootStep()
+    {
+        SoundEffectManager.Play("Walk");
     }
 
     public IEnumerator StaminaRecover(float currentStamina)

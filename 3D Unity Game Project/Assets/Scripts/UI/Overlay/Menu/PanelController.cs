@@ -73,7 +73,7 @@ public class PanelController : MonoBehaviour
 
         //Action subscriptions
         Quit.performed += ActiveInputPanelManager;
-        Menu.performed += ActiveInputPanelManager;
+        // Menu.performed += ActiveInputPanelManager;
         TutorialID.OnTutorialTrigger += SetActivePanel;
     }
 
@@ -82,7 +82,7 @@ public class PanelController : MonoBehaviour
     {
         //Action unsubscriptions
         Quit.performed -= ActiveInputPanelManager;
-        Menu.performed -= ActiveInputPanelManager;
+        // Menu.performed -= ActiveInputPanelManager;
         TutorialID.OnTutorialTrigger -= SetActivePanel;
         
         //Input Actions disabling

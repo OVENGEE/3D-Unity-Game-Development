@@ -289,7 +289,7 @@ public class PlayerThrowState : PlayerState,ITriggerHandler
         heldObject = null;
 
         lineRenderer.enabled = false; // Hide the trajectory line immediately after throw
-
+        SoundEffectManager.Play("Throw");
     }
 
     public void OnExitThrowStateToSprint(InputAction.CallbackContext context)
