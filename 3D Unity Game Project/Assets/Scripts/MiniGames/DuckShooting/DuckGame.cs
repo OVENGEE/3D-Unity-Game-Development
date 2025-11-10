@@ -14,7 +14,7 @@ public class DuckGame : MonoBehaviour, IGame,IGameCompleted
 
     Interaction interaction;
 
-    public event Action OnGameCompleted;
+    public static event Action OnGameCompleted;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -26,17 +26,12 @@ public class DuckGame : MonoBehaviour, IGame,IGameCompleted
 
     void OnEnable()
     {
+        PlayerShootState.OnTargetShot += CompleteGameObj;
     }
 
     void OnDisable()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        PlayerShootState.OnTargetShot -= CompleteGameObj;
     }
 
     public void InitialiseGame(BaseGame game)
@@ -51,7 +46,7 @@ public class DuckGame : MonoBehaviour, IGame,IGameCompleted
     public bool TryPlay()
     {
         //if game is able to be played and player tries to play game.
-        if (isUnlocked) TicketManager.AvailableTickets = -RequiredTickets;
+        if (isUnlocked) TicketManager.AvailableTickets -= RequiredTickets;
         return isUnlocked;
     }
 
@@ -59,4 +54,11 @@ public class DuckGame : MonoBehaviour, IGame,IGameCompleted
     {
         isUnlocked = ticket >= RequiredTickets;
     }
+
+    private void CompleteGameObj(int score)
+    {
+        if (score >= 10) OnGameCompleted?.Invoke();
+    }
+
+
 }

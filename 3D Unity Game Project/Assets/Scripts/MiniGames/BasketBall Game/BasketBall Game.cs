@@ -10,7 +10,7 @@ public class BasketBallGame : MonoBehaviour,IGame,IGameCompleted
     public bool isUnlocked { get ; set; }
     public GameType gameType { get; set; }
 
-    public event Action OnGameCompleted;
+    public static event Action OnGameCompleted;
 
     private void Awake()
     {
@@ -19,12 +19,12 @@ public class BasketBallGame : MonoBehaviour,IGame,IGameCompleted
 
     private void OnEnable()
     {
-
+        // HoopTrigger.OnHoopScored += CompleteGameObj;
     }
 
     private void OnDisable()
     {
-
+        // HoopTrigger.OnHoopScored -= CompleteGameObj;
     }
 
     public void DetermineGameAvailability(int ticket)
@@ -42,10 +42,17 @@ public class BasketBallGame : MonoBehaviour,IGame,IGameCompleted
 
     public bool TryPlay()
     {
-        if (isUnlocked) {
+        if (isUnlocked)
+        {
             TicketManager.AvailableTickets = -RequiredTickets;
             Debug.Log($"{gameinfo.name} can be played!");
         }
         return isUnlocked;
+    }
+    
+
+    private void CompleteGameObj(int score)
+    {
+        if (score >= 5) OnGameCompleted?.Invoke();
     }
 }

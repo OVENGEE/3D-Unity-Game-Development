@@ -37,10 +37,6 @@ public class MiniGameManager : MonoBehaviour
         OnSetAvailableGame -= SetMiniGamesAvailable;
     }
 
-    public void RegisterMiniGame(IGameCompleted miniGame)
-    {
-        miniGame.OnGameCompleted += HandleMiniGame;
-    }
 
     private void HandleMiniGame()
     {

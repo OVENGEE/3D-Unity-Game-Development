@@ -3,5 +3,5 @@ using UnityEngine;
 
 public interface IGameCompleted
 {
-    public  event Action OnGameCompleted;
+    public  static event Action OnGameCompleted;
 }
