@@ -28,7 +28,7 @@ public class WeatherController : MonoBehaviour
 
         if (initialSkyboxCubemap == null)
         {
-            Debug.LogError("cubemap not assigned in inspector");
+            // Debug.LogError("cubemap not assigned in inspector");
             return;
         }
 

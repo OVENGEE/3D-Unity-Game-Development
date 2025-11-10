@@ -1,20 +1,48 @@
-    using Unity.VisualScripting;
-    using UnityEditor;
-    using UnityEngine;
-    using UnityEngine.InputSystem;
+using System;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
-    public class PlayerShootState : PlayerWalkState,ITriggerHandler
+public class PlayerShootState : PlayerWalkState,ITriggerHandler
+{
+    //Shoot references
+    private float firetimer;
+    private float range;
+    private Camera camera;
+    Ray debugray;
+    bool shoot;
+    int score;
+
+    //Input actions
+    InputAction shootAction;
+    InputAction sprintAction;
+
+    //Animation
+    private AnimationData holdGunAnimation = new AnimationData
     {
-        //Shoot references
-        private float firetimer;
-        private float range;
-        private Camera camera;
-        Ray debugray;
-        bool shoot;
+        type = AnimationType.HoldGun,
+        layer = 1,
+        fadeDuration = 0.25f,
+        targetWeight = .7f,
+        useTrigger = false
+    };
+    
+    private AnimationData restholdGunAnimation = new AnimationData
+    {
+        type = AnimationType.HoldGun,
+        layer = 1,
+        fadeDuration = 0.25f,
+        targetWeight = 0f,
+        useTrigger = false
+    };
 
-        //Input actions
-        InputAction shootAction;
-        InputAction sprintAction;
+    //Events
+    public static event Action<int> OnTargetShot;
+    public static event Action<PanelType> OnShootPanelTrigger;
+    public static event Action OnShootPanelReset;
+
+    //Particle System
+    private ParticleSystem gunflash;    
 
         public PlayerShootState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
         {
@@ -26,9 +54,17 @@
             range = 20f;
             camera = base.player.camera;
 
+            score = 0;
             Player.PlayerState currentState = base.player.playerState;
+        gunflash = base.player.Gun?.GetComponentInChildren<ParticleSystem>();
+
+            
+            //Animation
+            animationManager.PlayAnimation(holdGunAnimation);
+        
             currentState = Player.PlayerState.Shoot;
             base.player.UpdateState(currentState);
+            OnShootPanelTrigger?.Invoke(PanelType.DuckShootingGame);
 
             if (shootAction == null)
             {
@@ -45,30 +81,41 @@
             sprintAction.performed += OnSprintActivated;
         }
 
-        public override void ExitState()
-        {
-            base.ExitState();
+    public override void ExitState()
+    {
+        base.ExitState();
+        base.player.Gun.transform.SetParent(null);
+        base.player.Gun.SetActive(false);
+        animationManager.PlayAnimation(restholdGunAnimation);
 
-            //Event unSubscriptions
-            shootAction.performed -= OnshootFunction;
-            sprintAction.performed -= OnSprintActivated;
-        }
+        //Event unSubscriptions
+        shootAction.performed -= OnshootFunction;
+        sprintAction.performed -= OnSprintActivated;
+    }
 
-        public override void PhysicsUpdate()
-        {
-            base.PhysicsUpdate();
-        }
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
 
-        public override void FrameUpdate()
-        {
+        // move = base.player.transform.right * moveDirectionInput.x + base.player.transform.forward * moveDirectionInput.y;
+        // if (controller.isGrounded && move.y < 0) move.y = -2f;
+
+        // move.y += (1.5f*GRAVITY) * Time.deltaTime;
+
+        // base.controller.Move(move * base.player.MoveSpeed * Time.deltaTime);
+
+    }
+
+    public override void FrameUpdate()
+    {
             base.FrameUpdate();
             firetimer -= Time.deltaTime;
-        }
+    }
 
-        public override void AnimationTriggerEvent()
-        {
+    public override void AnimationTriggerEvent()
+    {
             base.AnimationTriggerEvent();
-        }
+    }
 
     void OnshootFunction(InputAction.CallbackContext context)
     {
@@ -76,13 +123,15 @@
         Ray ray = new Ray(camera.transform.position, camera.transform.forward);
 
         //Play animation and particle effect
-        base.player.muzzleflash.Play();
-
+        gunflash.Play();
         if (Physics.Raycast(ray, out hit, range))
         {
 
             if (hit.collider.TryGetComponent<Target>(out Target target))
             {
+                score++;
+                OnTargetShot?.Invoke(score);
+                
                 Debug.Log($"{hit.collider.name} has been hit!");
                 target.PlayAfterShotRoutine();
             }
@@ -97,7 +146,8 @@
     private void OnExitShootState()
     {
         //Switch to the walking state!
-        base.player.tempGun.SetActive(false);
+        //base.player.Gun.SetActive(false);
+        OnShootPanelReset?.Invoke();
         playerStateMachine.SwitchState(new PlayerWalkState(player, playerStateMachine));
     }
     public void OnTriggerExit(Collider other)
@@ -112,7 +162,6 @@
     void OnSprintActivated(InputAction.CallbackContext context)
     {
         //Switch to the sprint state!
-        base.player.tempGun.SetActive(false);
         playerStateMachine.SwitchState(new PlayerSprintState(player, playerStateMachine));
     }
 }

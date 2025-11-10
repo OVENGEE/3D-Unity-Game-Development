@@ -13,12 +13,23 @@ public class PlayerSprintState : PlayerWalkState
     float staminaTimer, MaxStamina, ChargeRate, staminaVal;
 
     //FOV variables
-    float sprintFOV = 90f;
+    float sprintFOV = 78f;
 
 
     //Events 
     public static event Action OnSprintEffectStarted;
     public static event Action OnSprintEffectEnded;
+
+    //Animation
+
+    private AnimationData sprintAnimation = new AnimationData
+    {
+        type = AnimationType.Run,
+        layer = 0,
+        fadeDuration = 0.15f,
+        targetWeight = 1f,
+        useTrigger = false
+    };
 
     public PlayerSprintState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
@@ -30,6 +41,9 @@ public class PlayerSprintState : PlayerWalkState
         Player.PlayerState currentState = base.player.playerState;
         currentState = Player.PlayerState.Sprint;
         base.player.UpdateState(currentState);
+
+
+        animationManager.PlayAnimation(sprintAnimation);
 
 
         //Assigning from monobehaviour class
@@ -85,9 +99,12 @@ public class PlayerSprintState : PlayerWalkState
 
     public override void PhysicsUpdate()
     {
-        base.PhysicsUpdate();
+        move = base.player.transform.right * moveDirectionInput.x + base.player.transform.forward * moveDirectionInput.y;
+        if (controller.isGrounded && move.y < 0) move.y = -2f;
+
+        move.y += (1.7f*GRAVITY) * Time.deltaTime;
         //Sprint movement logic
-        base.controller.Move(base.move * base.player.MoveSpeed * Time.deltaTime);
+        base.controller.Move(move * base.player.sprintSpeed * Time.deltaTime);
 
         //change the fov
         base.FOVTransition(sprintFOV);

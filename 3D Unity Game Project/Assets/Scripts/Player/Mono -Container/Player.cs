@@ -48,6 +48,7 @@ public class Player : MonoBehaviour
     public float sprintCooldownTimer = 0f;
     public float sprintCooldown = 3f;
     public float MaxStamina = 4f;
+    public float sprintSpeed = 12f; 
     public float ChargeRate = 33f;
     public Coroutine recharge;  
     private float staminaTimer = 0f;
@@ -90,8 +91,12 @@ public class Player : MonoBehaviour
 
     [Header("Gun Settings")]
 
-    public GameObject tempGun;
+    public GameObject Gun;
     public ParticleSystem muzzleflash;
+
+
+    //Animation
+    public AnimationManager animationManager;
 
     void Awake()
     {
@@ -102,6 +107,8 @@ public class Player : MonoBehaviour
         SprintState = new PlayerSprintState(this, StateMachine);
         ThrowState = new PlayerThrowState(this, StateMachine);
         NullChecks();
+
+        animationManager = FindAnyObjectByType<AnimationManager>();
     }
 
     void Start()
@@ -137,7 +144,9 @@ public class Player : MonoBehaviour
     {
         InteractSlider.SetActive(false);
         StateMachine.SwitchState(ShootState);
-        tempGun.SetActive(true);
+        Gun.transform.SetParent(holdPoint);
+        Gun.transform.position = holdPoint.position; // + new Vector3(0f,0f,-0.2f);
+        Gun.SetActive(true);
     }
 
     public void SwitchToThrowState()
@@ -221,7 +230,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if (tempGun == null)
+        if (Gun == null)
         {
             Debug.Log("the tempGun is not assigned to the Player inspector!");
             return;
