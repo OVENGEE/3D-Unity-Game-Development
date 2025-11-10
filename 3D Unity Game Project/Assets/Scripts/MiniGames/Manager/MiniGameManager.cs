@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
@@ -16,32 +17,41 @@ public class MiniGameManager : MonoBehaviour
     const int InteractableLayer = 7;
     const int UnavailableLayer = 8;
 
-    //
+    [SerializeField] GameObject ConfettiGroup;
 
 
     private void Awake()
     {
         miniGameObjects = FindMiniGameObjects();
         InitialMiniGameStates(miniGameObjects);
+        if (ConfettiGroup == null)
+        {
+            Debug.LogError("ConfettiGroup not assigned in inspector!");
+            return;
+        }
     }
     
     private void OnEnable()
     {
         TicketManager.OnAvailableGames += AvailableGameRegistry;
         OnSetAvailableGame += SetMiniGamesAvailable;
+        DuckGame.OnGameCompleted += HandleMiniGame;
+        BasketBallGame.OnGameCompleted += HandleMiniGame;
     }
 
     private void OnDisable()
     {
         TicketManager.OnAvailableGames -= AvailableGameRegistry;
+        DuckGame.OnGameCompleted -= HandleMiniGame;
+        BasketBallGame.OnGameCompleted -= HandleMiniGame;
         OnSetAvailableGame -= SetMiniGamesAvailable;
+        
     }
 
 
     private void HandleMiniGame()
     {
-        //Wrapper to invoke the event
-        onAnyGameCompleted?.Invoke();
+        StartCoroutine(ConfettiRoutine());
     }
 
     private void AvailableGameRegistry(List<IGame> games)
@@ -82,9 +92,9 @@ public class MiniGameManager : MonoBehaviour
             miniGame.layer = UnavailableLayer;
         }
     }
-    
 
-    private  void SetMiniGamesAvailable(List<GameObject> minigamesObjects)
+
+    private void SetMiniGamesAvailable(List<GameObject> minigamesObjects)
     {
         foreach (var miniGameObject in miniGameObjects)
         {
@@ -105,6 +115,13 @@ public class MiniGameManager : MonoBehaviour
                 miniGameObject.layer = 8;
             }
         }
+    }
+    
+    private IEnumerator ConfettiRoutine()
+    {
+        ConfettiGroup.SetActive(true);
+        yield return new WaitForSecondsRealtime(1f);
+        ConfettiGroup.SetActive(false);
     }
 }
 
