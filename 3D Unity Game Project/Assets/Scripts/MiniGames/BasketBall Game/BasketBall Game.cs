@@ -19,12 +19,12 @@ public class BasketBallGame : MonoBehaviour,IGame,IGameCompleted
 
     private void OnEnable()
     {
-        // HoopTrigger.OnHoopScored += CompleteGameObj;
+        HoopTrigger.OnHoopScored += CompleteGameObj;
     }
 
     private void OnDisable()
     {
-        // HoopTrigger.OnHoopScored -= CompleteGameObj;
+        HoopTrigger.OnHoopScored -= CompleteGameObj;
     }
 
     public void DetermineGameAvailability(int ticket)
