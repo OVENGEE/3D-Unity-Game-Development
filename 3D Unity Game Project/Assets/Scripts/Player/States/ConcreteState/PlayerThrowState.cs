@@ -1,14 +1,70 @@
+using System.Collections;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerThrowState : PlayerWalkState,ITriggerHandler
+public class PlayerThrowState : PlayerState,ITriggerHandler
 {
     //Input Action Declaration
     InputAction aimAction;
     InputAction pickUpAction;
     InputAction throwAction;
+    InputAction crouchAction;
+    InputAction sprintAction;
+    InputAction moveAction;
+
+    //Vector
+    private Vector2 moveDirectionInput;
+    private Vector3 velocity;
+    private Vector3 move;
+
+    //Controller
+    private CharacterController controller;
+
+    //Constants
+    const float GRAVITY = -9.81f;
+
+    //Animation:
+    private AnimationManager animationManager;
+    private Animator animator;
+    private AnimationType lastPlayed;
+    private AnimationData holdAnimation = new AnimationData
+    {
+        type = AnimationType.HoldGun,
+        layer = 1,
+        fadeDuration = 0.25f,
+        targetWeight = .7f,
+        useTrigger = false
+    };
+
+    private AnimationData UndoHoldAnimation = new AnimationData
+    {
+        type = AnimationType.HoldGun,
+        layer = 1,
+        fadeDuration = 0.25f,
+        targetWeight = 0f,
+        useTrigger = false
+    };
+    
+
+    private AnimationData walkAnimation = new AnimationData
+    {
+        type = AnimationType.Walk,
+        layer = 0,
+        fadeDuration = 0.15f,
+        targetWeight = 1f,
+        useTrigger = false
+    };
+
+    private AnimationData idleAnimation = new AnimationData
+    {
+        type = AnimationType.Idle,
+        layer = 0,
+        fadeDuration = 0.15f,
+        targetWeight = 1f,
+        useTrigger = false
+    };
 
     //Pick Up variables
     private float PickUpRange;
@@ -29,6 +85,7 @@ public class PlayerThrowState : PlayerWalkState,ITriggerHandler
 
     //Line renderer
     private LineRenderer lineRenderer;
+    
 
     public PlayerThrowState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
@@ -37,6 +94,11 @@ public class PlayerThrowState : PlayerWalkState,ITriggerHandler
     public override void EnterState()
     {
         base.EnterState();
+        lastPlayed = AnimationType.HoldGun;
+        animationManager = base.player.animationManager;
+        animationManager.PlayAnimation(holdAnimation);
+        animator = animationManager.animator;
+        controller = base.player.GetComponent<CharacterController>();
 
         Player.PlayerState currentState = base.player.playerState;
         currentState = Player.PlayerState.Throw;
@@ -59,15 +121,21 @@ public class PlayerThrowState : PlayerWalkState,ITriggerHandler
         //Event Subscriptions
         throwAction.performed += OnThrow;
         pickUpAction.performed += OnPickUp;
+        sprintAction.performed += OnExitThrowStateToSprint;
+        crouchAction.performed += OnExitThrowStateToCrouch;
     }
 
     public override void ExitState()
     {
         base.ExitState();
+        animationManager.PlayAnimation(UndoHoldAnimation);
+        heldObject?.Drop();
 
         //Event unsubscriptions
         throwAction.performed -= OnThrow;
         pickUpAction.performed -= OnPickUp;
+        sprintAction.performed -= OnExitThrowStateToSprint;
+        crouchAction.performed -= OnExitThrowStateToCrouch;
     }
 
     public void OnTriggerExit(Collider other)
@@ -82,25 +150,54 @@ public class PlayerThrowState : PlayerWalkState,ITriggerHandler
     private void InputActionAssignment()
     {
         //Assigning all Input actions of the state
-        if (pickUpAction == null)
+        aimAction = base.player.inputs?.Player.Aim;
+        pickUpAction = base.player.inputs?.Player.PickUp;
+        throwAction = base.player.inputs?.Player.Throw;
+        sprintAction = base.player.inputs?.Player.Sprint;
+        crouchAction = base.player.inputs?.Player.Crouch;
+        moveAction = base.player.inputs?.Player.Move;
+
+    }
+
+    void HandleMovement()
+    {
+        //Motion calculation
+        move = base.player.transform.right * moveDirectionInput.x + base.player.transform.forward * moveDirectionInput.y;
+        float moveSpeed = base.player.MoveSpeed;
+
+        //Apply motion to controller
+        controller.Move(move * moveSpeed * Time.deltaTime);
+
+        //Ground check for controller
+        if (controller.isGrounded && velocity.y < 0) velocity.y = -2f;
+
+        velocity.y += GRAVITY * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
+        bool isMoving = move.sqrMagnitude > 0.01f;
+
+        if (isMoving && lastPlayed != AnimationType.Walk)
         {
-            pickUpAction = base.player.inputs?.Player.PickUp;
+            animationManager.PlayAnimation(walkAnimation);
+            lastPlayed = AnimationType.Walk;
+        }
+        else if (!isMoving && lastPlayed != AnimationType.Idle)
+        {
+            animationManager.PlayAnimation(idleAnimation);
+            lastPlayed = AnimationType.Idle;
         }
 
-        if (throwAction == null)
-        {
-            throwAction = base.player.inputs?.Player.Throw;
-        }
-
-        if (aimAction == null)
-        {
-            aimAction = base.player.inputs?.Player.Aim;
-        }
+    }
+    public override void FrameUpdate()
+    {
+        base.FrameUpdate();
+        moveDirectionInput = moveAction.ReadValue<Vector2>();
+  
     }
 
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        HandleMovement();
         if (heldObject != null)
         {
             heldObject.MoveToHoldPoint(holdPoint.position);
@@ -183,6 +280,8 @@ public class PlayerThrowState : PlayerWalkState,ITriggerHandler
         if (!context.performed) return;
         if (heldObject == null) return;
 
+
+
         Vector3 dir = camera.transform.forward;
         Vector3 impulse = dir * throwForce + Vector3.up * throwUpwardBoost;
 
@@ -190,5 +289,18 @@ public class PlayerThrowState : PlayerWalkState,ITriggerHandler
         heldObject = null;
 
         lineRenderer.enabled = false; // Hide the trajectory line immediately after throw
+
     }
+
+    public void OnExitThrowStateToSprint(InputAction.CallbackContext context)
+    {
+        playerStateMachine.SwitchState(new PlayerSprintState(player, playerStateMachine));
+    }
+
+    public void OnExitThrowStateToCrouch(InputAction.CallbackContext context)
+    {
+        playerStateMachine.SwitchState(new PlayerCrouchState(player, playerStateMachine));
+    }
+    
+
 }
