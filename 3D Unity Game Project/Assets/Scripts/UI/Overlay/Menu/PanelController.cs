@@ -212,7 +212,8 @@ public enum PanelType
     Quit,
     DuckShootingGame,
     BasketBallGame,
-    UnAvailableGame
+    UnAvailableGame,
+    Dialogue
 }
 
 [System.Serializable]
